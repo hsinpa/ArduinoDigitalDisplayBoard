@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641234, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -390,6 +390,7 @@ GameObject:
   m_Component:
   - component: {fileID: 69769585}
   - component: {fileID: 69769584}
+  - component: {fileID: 69769586}
   m_Layer: 0
   m_Name: Bluetooth
   m_TagString: Untagged
@@ -424,6 +425,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &69769586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69769583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 279f4c49a324cdb4ba150f4f11fbc47b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  digitalBoardBluetoothManager: {fileID: 69769584}
 --- !u!1 &169089439
 GameObject:
   m_ObjectHideFlags: 0
@@ -2080,6 +2094,7 @@ GameObject:
   - component: {fileID: 1488055236}
   - component: {fileID: 1488055235}
   - component: {fileID: 1488055234}
+  - component: {fileID: 1488055237}
   m_Layer: 5
   m_Name: H_Add_Point
   m_TagString: Untagged
@@ -2190,6 +2205,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1488055232}
   m_CullTransparentMesh: 1
+--- !u!114 &1488055237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1488055232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8df726a0daa34a348a27c6773ecadbc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1488055234}
+  value: 1
+  is_increment: 1
+  key: score@h_score
+  category: event@ui_score
 --- !u!1 &1542700994
 GameObject:
   m_ObjectHideFlags: 0
@@ -2324,6 +2356,7 @@ GameObject:
   - component: {fileID: 1648794671}
   - component: {fileID: 1648794670}
   - component: {fileID: 1648794669}
+  - component: {fileID: 1648794672}
   m_Layer: 5
   m_Name: G_Add_Point
   m_TagString: Untagged
@@ -2434,6 +2467,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1648794667}
   m_CullTransparentMesh: 1
+--- !u!114 &1648794672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648794667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8df726a0daa34a348a27c6773ecadbc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1648794669}
+  value: 1
+  is_increment: 1
+  key: score@g_score
+  category: event@ui_score
 --- !u!1 &1895925916
 GameObject:
   m_ObjectHideFlags: 0
@@ -2581,7 +2631,7 @@ GameObject:
   - component: {fileID: 1929182245}
   - component: {fileID: 1929182244}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: Score_Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2613,8 +2663,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -250.55473, y: 0}
-  m_SizeDelta: {x: -501.1095, y: 0}
+  m_AnchoredPosition: {x: -241.56097, y: 0}
+  m_SizeDelta: {x: -483.1219, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1929182244
 MonoBehaviour:

@@ -33,7 +33,7 @@ namespace Hsinpa.Bluetooth
         }
 
         private void OnScoreUIChange(DigitalBoardUI.UIDataStruct uiDataStruct) {
-
+            Debug.Log("OnScoreUIChange");
             if (uiDataStruct.is_increment) {
 
                 if (uiDataStruct.value >= 0)
@@ -44,6 +44,10 @@ namespace Hsinpa.Bluetooth
 
                 _scoreType.Set_Value(uiDataStruct.id, uiDataStruct.value);
             }
+
+            //byte[] test_byte_event = new byte[10] {
+            //    0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+            //};
 
             digitalBoardBluetoothManager.WriteToCharacteristics(digitalBoardBluetoothManager.ScoreCharacteristic, _scoreType.Data);
         }

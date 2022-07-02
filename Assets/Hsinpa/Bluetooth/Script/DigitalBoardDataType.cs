@@ -38,7 +38,7 @@ namespace Hsinpa.Bluetooth
                 if (index_table.TryGetValue(key, out int index))
                 {
                     byte convert_byte = Convert.ToByte(value);
-                    Debug.Log("convert_byte " + convert_byte);
+                    //Debug.Log("convert_byte " + convert_byte);
                     this.raw_data[index] = convert_byte;
                 }
             }
@@ -49,6 +49,14 @@ namespace Hsinpa.Bluetooth
                 }
 
                 return 0;
+            }
+
+            public void DebugLog() {
+                string str = "";
+                for (int i = 0; i < this.length; i++) {
+                    str += raw_data[i];
+                }
+                Debug.Log("convert_byte \n" + str);
             }
 
             public void Dispose() {
@@ -79,23 +87,23 @@ namespace Hsinpa.Bluetooth
         [System.Serializable]
         public struct OtherType
         {
-            public System.Int32 Data1;///羭礟家Α1
-            public System.Int32 Data2;//羭礟家Α2
-            public System.Int32 Data3;//羭礟家Α3
-            public System.Int32 Data4;//羭礟家Α4
-            public System.Int32 FoulMode;//膞瞴デ砏家Α
-            public System.Int32 player;//デ砏匡も
+            public System.Int32 Data1;///?|?P????1
+            public System.Int32 Data2;//?|?P????2
+            public System.Int32 Data3;//?|?P????3
+            public System.Int32 Data4;//?|?P????4
+            public System.Int32 FoulMode;//?x?y???W????
+            public System.Int32 player;//???W????
 
-            public System.Int32 Foul;//デ砏Ω计
-            public System.Int32 Substitution;//传家Α
+            public System.Int32 Foul;//???W????
+            public System.Int32 Substitution;//???H????
 
-            public System.Int32 team;//钉ヮ
-            public System.Int32 player2;//初匡も
-            public System.Int32 player3;//初匡も
+            public System.Int32 team;//????
+            public System.Int32 player2;//?W??????
+            public System.Int32 player3;//?U??????
 
-            public System.Int32 end;//初
-            public System.Int32 OtherData1;//ㄤDATA
-            public System.Int32 OtherData2;//ㄤDATA
+            public System.Int32 end;//?W?U??
+            public System.Int32 OtherData1;//???LDATA
+            public System.Int32 OtherData2;//???LDATA
         }
     }
 }

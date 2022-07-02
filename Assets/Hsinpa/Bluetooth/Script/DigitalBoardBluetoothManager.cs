@@ -114,7 +114,6 @@ namespace Hsinpa.Bluetooth
         }
 
         public void WriteToCharacteristics(BluetoothHelperCharacteristic characteristic, byte[] bytes) {
-            if (helper.Available)
                 helper.WriteCharacteristic(characteristic, bytes);            
         }
 

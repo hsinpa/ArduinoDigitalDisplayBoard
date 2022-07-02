@@ -1,3 +1,4 @@
+using ArduinoBluetoothAPI;
 using SimpleEvent.ID;
 using System;
 using System.Collections;
@@ -65,45 +66,18 @@ namespace Hsinpa.Bluetooth
         }
 
         [System.Serializable]
-        public struct TimeType
+        public struct UIDataStruct
         {
-            public System.Int32 Year;
-            public System.Int32 Month;
-            public System.Int32 Day;
-            public System.Int32 Hour;
-            public System.Int32 Minute;
-            public System.Int32 Second;
-
-            public System.Int32 Weekday;
-            public System.Int32 Subsecond;
-
-            public System.Int32 adjust_reason;
-            public System.Int32 Counting_mode;
-
-            public System.Int32 Time_display_mode;
-            public System.Int32 Other_Second;
+            public string id;
+            public string category;
+            public int value;
+            public bool is_increment;
         }
 
-        [System.Serializable]
-        public struct OtherType
+        public struct BluetoothDataStruct
         {
-            public System.Int32 Data1;///?|?P????1
-            public System.Int32 Data2;//?|?P????2
-            public System.Int32 Data3;//?|?P????3
-            public System.Int32 Data4;//?|?P????4
-            public System.Int32 FoulMode;//?x?y???W????
-            public System.Int32 player;//???W????
-
-            public System.Int32 Foul;//???W????
-            public System.Int32 Substitution;//???H????
-
-            public System.Int32 team;//????
-            public System.Int32 player2;//?W??????
-            public System.Int32 player3;//?U??????
-
-            public System.Int32 end;//?W?U??
-            public System.Int32 OtherData1;//???LDATA
-            public System.Int32 OtherData2;//???LDATA
+            public BluetoothHelperCharacteristic characteristic;
+            public byte[] data;
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Hsinpa.Bluetooth
         public BluetoothHelperCharacteristic OtherCharacteristic => otherCharacteristic;
 
         public System.Action OnConnect;
-
+        public System.Action OnDisconnect;
 
         void Start()
         {
@@ -93,33 +93,36 @@ namespace Hsinpa.Bluetooth
             helper.Subscribe(timeCharacteristic);
             helper.Subscribe(otherCharacteristic);
 
-            var d = 0x00 + 0x00;
+            //    byte[] test_byte_event = new byte[10] {
+            //    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x09, 0x00, 0x00
+            //};
 
-            byte[] test_byte_event = new byte[10] {
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x09, 0x00, 0x00
-        };
-
-            byte[] test_byte_event2 = new byte[10] {
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00
-        };
+            //    byte[] test_byte_event2 = new byte[10] {
+            //    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00
+            //};
 
             //byte[] test_byte_event = new byte[10] {
             //    0x09, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
             //};
-            helper.WriteCharacteristic(scoreCharacteristic, test_byte_event);
-            helper.WriteCharacteristic(scoreCharacteristic, test_byte_event2);
+            //helper.WriteCharacteristic(scoreCharacteristic, test_byte_event);
+            //helper.WriteCharacteristic(scoreCharacteristic, test_byte_event2);
 
             if (OnConnect != null)
                 OnConnect();
         }
 
         public void WriteToCharacteristics(BluetoothHelperCharacteristic characteristic, byte[] bytes) {
-                helper.WriteCharacteristic(characteristic, bytes);            
+            if (helper == null) return;
+
+            helper.WriteCharacteristic(characteristic, bytes);            
         }
 
         void OnConnectionFailed(BluetoothHelper helper)
         {
             Debug.Log("Connection lost");
+
+            if (OnDisconnect != null)
+                OnDisconnect();
         }
 
 
@@ -143,6 +146,7 @@ namespace Hsinpa.Bluetooth
             helper.OnCharacteristicNotFound -= OnCharacteristicNotFound;
             helper.OnServiceNotFound -= OnServiceNotFound;
             helper.Disconnect();
+            helper = null;
         }
     }
 }

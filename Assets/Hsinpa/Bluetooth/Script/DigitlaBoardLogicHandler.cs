@@ -10,6 +10,10 @@ namespace Hsinpa.Bluetooth
         [SerializeField]
         private DigitalBoardBluetoothManager digitalBoardBluetoothManager;
 
+        [SerializeField]
+        private DigitalBoardEventSender digitalBoardEventSender;
+
+
         private DigitalBoardDataType.CharacterirticsData _scoreType;
         //private DigitalBoardDataType.CharacterirticsData _timeType;
         //private DigitalBoardDataType.CharacterirticsData _otherType;
@@ -29,10 +33,10 @@ namespace Hsinpa.Bluetooth
 
         private void OnSimpleEventSystem(string id, object[] values) {
             if (id == MessageEventFlag.HsinpaBluetoothEvent.UIEvent.score && values.Length > 0)
-                OnScoreUIChange((DigitalBoardUI.UIDataStruct)values[0]);
+                OnScoreUIChange((DigitalBoardDataType.UIDataStruct)values[0]);
         }
 
-        private void OnScoreUIChange(DigitalBoardUI.UIDataStruct uiDataStruct) {
+        private void OnScoreUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct) {
             Debug.Log("OnScoreUIChange");
             if (uiDataStruct.is_increment) {
 
@@ -45,11 +49,12 @@ namespace Hsinpa.Bluetooth
                 _scoreType.Set_Value(uiDataStruct.id, uiDataStruct.value);
             }
 
-            //byte[] test_byte_event = new byte[10] {
-            //    0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-            //};
+            DigitalBoardDataType.BluetoothDataStruct bluetoothDataStruct = new DigitalBoardDataType.BluetoothDataStruct() { 
+                characteristic = digitalBoardBluetoothManager.ScoreCharacteristic,
+                data = _scoreType.Data
+            };
 
-            digitalBoardBluetoothManager.WriteToCharacteristics(digitalBoardBluetoothManager.ScoreCharacteristic, _scoreType.Data);
+            digitalBoardEventSender.SendBluetoothData(bluetoothDataStruct);
         }
 
         private void OnDestroy()

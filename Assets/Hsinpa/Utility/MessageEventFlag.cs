@@ -11,6 +11,8 @@ namespace SimpleEvent.ID {
                 public const string score = "event@ui_score";
                 public const string time = "event@ui_time";
                 public const string other = "event@ui_other";
+
+                public const string dispose = "event@dispose";
             }
 
             public class ScoreUI
@@ -30,7 +32,7 @@ namespace SimpleEvent.ID {
             public class TimeUI
             {
                 public const string Year = "time@year";
-                public const string Month = "time@moth";
+                public const string Month = "time@month";
                 public const string Day = "time@day";
                 public const string Hour = "time@hour";
                 public const string Minute = "time@minute";
@@ -41,6 +43,11 @@ namespace SimpleEvent.ID {
                 public const string Counting_mode = "time@counting_mode";
                 public const string Time_display_mode = "time@time_display_mode";
                 public const string Other_Second = "time@other_second";
+
+                //Action
+                public const string Start_Timer = "time_event@start_timer";
+                public const string Stop_Timer = "time_event@stop_timer";
+                public const string Reset_Timer = "time_event@reset_timer";
             }
 
             public static Dictionary<string, int> ScoreIndexTable = new Dictionary<string, int>() {

@@ -72,6 +72,7 @@ namespace Hsinpa.Bluetooth
             public string category;
             public int value;
             public bool is_increment;
+            public bool hide_bluetooth_event;
         }
 
         public struct BluetoothDataStruct

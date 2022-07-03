@@ -13,6 +13,9 @@ namespace Hsinpa.Bluetooth
 
         private Queue<DigitalBoardDataType.BluetoothDataStruct> dataStructQueue = new Queue<DigitalBoardDataType.BluetoothDataStruct>();
 
+        private float record_time;
+        private float perioid_delay = 0.1f;
+
         #region API
         public void SendBluetoothData(DigitalBoardDataType.BluetoothDataStruct dataStruct) {
             dataStructQueue.Enqueue(dataStruct);
@@ -30,11 +33,13 @@ namespace Hsinpa.Bluetooth
 
         private void Update()
         {
-            if (!is_connected || dataStructQueue.Count <= 0) return;
+            if (!is_connected || dataStructQueue.Count <= 0 || record_time > Time.time) return;
 
             DigitalBoardDataType.BluetoothDataStruct uiDataStruct = dataStructQueue.Dequeue();
 
             digitalBoardBluetoothManager.WriteToCharacteristics(uiDataStruct.characteristic, uiDataStruct.data);
+
+            record_time = Time.time + perioid_delay;
         }
 
         private void OnBluetoothConnected() {

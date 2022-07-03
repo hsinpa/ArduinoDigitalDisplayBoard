@@ -11,6 +11,10 @@ namespace Hsinpa.Bluetooth
         private bool timer_state = false;
         public bool TimerState => timer_state;
 
+        public DigitalTimer() {
+            Dispose();
+        }
+
         public void StartTimer() {
             start_datetime = System.DateTime.UtcNow;
 
@@ -21,6 +25,11 @@ namespace Hsinpa.Bluetooth
             timer_state = false;
 
             leak_datetime = GetTimeDifferent();
+        }
+
+        public void ResetTimer()
+        {
+            Dispose();
         }
 
         public System.Int32 GetHour()
@@ -43,7 +52,7 @@ namespace Hsinpa.Bluetooth
             return (System.DateTime.UtcNow - start_datetime) + leak_datetime;
         }
 
-        public void Dispose() {
+        private void Dispose() {
             start_datetime = System.DateTime.MinValue;
             leak_datetime = System.TimeSpan.Zero;
             timer_state = false;

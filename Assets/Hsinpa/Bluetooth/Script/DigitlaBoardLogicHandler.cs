@@ -16,6 +16,8 @@ namespace Hsinpa.Bluetooth
         [SerializeField]
         private DigitalBoardEventSender digitalBoardEventSender;
 
+        [SerializeField]
+        private DigitalMessageSRP boostConfigSRP;
 
         private DigitalBoardDataType.CharacterirticsData _scoreType;
         private DigitalBoardDataType.CharacterirticsData _timeType;
@@ -28,6 +30,7 @@ namespace Hsinpa.Bluetooth
 
         private void Awake()
         {
+            digitalBoardBluetoothManager.OnConnect += OnBluetoothConnect;
             Hsinpa.Utility.SimpleEventSystem.Dispose();
             this._scoreType = new DigitalBoardDataType.CharacterirticsData(10, MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable);
             this._timeType = new DigitalBoardDataType.CharacterirticsData(11, MessageEventFlag.HsinpaBluetoothEvent.TimeIndexTable);
@@ -56,7 +59,7 @@ namespace Hsinpa.Bluetooth
             _timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Minute, p_digital_timer.GetMinute());
             _timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Second, p_digital_timer.GetSecond());
 
-            //Debug.Log(p_digital_timer.GetSecond());
+            Debug.Log(p_digital_timer.GetSecond());
 
             //DigitalBoardDataType.BluetoothDataStruct bluetoothDataStruct = new DigitalBoardDataType.BluetoothDataStruct()
             //{
@@ -149,6 +152,7 @@ namespace Hsinpa.Bluetooth
 
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Reset_Timer:
                     _digitalTimer.ResetTimer();
+                    _timeType.Dispose();
                     break;
 
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Counting_mode:
@@ -158,9 +162,15 @@ namespace Hsinpa.Bluetooth
             }
         }
 
+        private void OnBluetoothConnect() {
+            if (boostConfigSRP != null)
+                boostConfigSRP.Execute();
+        }
+
         private void OnDestroy()
         {
             SimpleEventSystem.CustomEventListener -= OnSimpleEventSystem;
+            digitalBoardBluetoothManager.OnConnect -= OnBluetoothConnect;
         }
 
         private void Dispose()

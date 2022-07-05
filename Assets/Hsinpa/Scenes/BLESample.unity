@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641234, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -595,7 +595,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   digitalBoardBluetoothManager: {fileID: 69769584}
   digitalBoardEventSender: {fileID: 69769587}
-  boostConfigSRP: {fileID: 0}
+  boostConfigSRP: {fileID: 11400000, guid: 216a1b43b62f14bbead688c0a3ea5358, type: 2}
 --- !u!114 &69769587
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3081,17 +3081,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI object
       objectReference: {fileID: 0}
-    - target: {fileID: 8557613697304654189, guid: 0a84c0f423feba6419280e8beaef82ec, type: 3}
-      propertyPath: m_MatchWidthOrHeight
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8557613697304654189, guid: 0a84c0f423feba6419280e8beaef82ec, type: 3}
-      propertyPath: m_ReferenceResolution.x
-      value: 768
-      objectReference: {fileID: 0}
-    - target: {fileID: 8557613697304654189, guid: 0a84c0f423feba6419280e8beaef82ec, type: 3}
-      propertyPath: m_ReferenceResolution.y
-      value: 432
+    - target: {fileID: 8557613697832122809, guid: 0a84c0f423feba6419280e8beaef82ec, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.00024414062
       objectReference: {fileID: 0}
     - target: {fileID: 8863485702103175144, guid: 0a84c0f423feba6419280e8beaef82ec, type: 3}
       propertyPath: m_RootOrder

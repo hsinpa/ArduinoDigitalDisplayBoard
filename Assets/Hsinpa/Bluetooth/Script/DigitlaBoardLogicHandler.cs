@@ -59,7 +59,7 @@ namespace Hsinpa.Bluetooth
             _timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Minute, p_digital_timer.GetMinute());
             _timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Second, p_digital_timer.GetSecond());
 
-            Debug.Log(p_digital_timer.GetSecond());
+            //Debug.Log(p_digital_timer.GetSecond());
 
             //DigitalBoardDataType.BluetoothDataStruct bluetoothDataStruct = new DigitalBoardDataType.BluetoothDataStruct()
             //{

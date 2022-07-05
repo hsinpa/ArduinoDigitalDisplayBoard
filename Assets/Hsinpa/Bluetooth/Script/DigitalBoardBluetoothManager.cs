@@ -101,13 +101,14 @@ namespace Hsinpa.Bluetooth
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00
             };
 
-            byte[] test_byte_event3 = new byte[11] {
+            //byte[] test_byte_event3 = new byte[11] {
+            //    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01
+            //};
+
+
+            byte[] test_byte_event4 = new byte[11] {
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00
             };
-
-            //byte[] test_byte_event4 = new byte[11] {
-            //    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x01
-            //};
 
             //byte[] test_byte_event5 = new byte[11] {
             //    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00
@@ -118,8 +119,8 @@ namespace Hsinpa.Bluetooth
             //};
             helper.WriteCharacteristic(scoreCharacteristic, test_byte_event);
             helper.WriteCharacteristic(scoreCharacteristic, test_byte_event2);
-            helper.WriteCharacteristic(timeCharacteristic, test_byte_event3);
-            //helper.WriteCharacteristic(timeCharacteristic, test_byte_event4);
+            //helper.WriteCharacteristic(timeCharacteristic, test_byte_event3);
+            helper.WriteCharacteristic(timeCharacteristic, test_byte_event4);
             //helper.WriteCharacteristic(timeCharacteristic, test_byte_event5);
 
             if (OnConnect != null)

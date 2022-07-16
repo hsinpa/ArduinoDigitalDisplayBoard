@@ -24,19 +24,33 @@ namespace Hsinpa.Bluetooth
         private DigitalBoardDataType.CharacterirticsData _otherType;
 
         private DigitalTimer _digitalTimer;
-
+        private MessageEventFlag.HsinpaBluetoothEvent.SportSettingStruct _sportSettingStruct;
         private const float update_period = 0.5f;
         private float update_record = 0;
+
+
+        public void SetSportStruct(MessageEventFlag.HsinpaBluetoothEvent.SportSettingStruct sportSettingStruct) {
+            this._sportSettingStruct = sportSettingStruct;
+        }
+
+        public void ResetDigitalBoard()
+        {
+            Dispose();
+            OnBluetoothConnect();
+        }
 
         private void Awake()
         {
             digitalBoardBluetoothManager.OnConnect += OnBluetoothConnect;
             Hsinpa.Utility.SimpleEventSystem.Dispose();
             this._scoreType = new DigitalBoardDataType.CharacterirticsData(10, MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable);
-            this._timeType = new DigitalBoardDataType.CharacterirticsData(11, MessageEventFlag.HsinpaBluetoothEvent.TimeIndexTable);
+            this._timeType = new DigitalBoardDataType.CharacterirticsData(12, MessageEventFlag.HsinpaBluetoothEvent.TimeIndexTable);
             //this._otherType = new DigitalBoardDataType.CharacterirticsData(14);
 
             this._digitalTimer = new DigitalTimer();
+
+            _scoreType.OnValueChange += OnInternalValueChange;
+            _timeType.OnValueChange += OnInternalValueChange;
         }
 
         private void Start()
@@ -98,6 +112,16 @@ namespace Hsinpa.Bluetooth
             digitalBoardEventSender.SendBluetoothData(bluetoothDataStruct);
         }
 
+        private DigitalBoardDataType.UIDataStruct ReplaceDataStructWithTable(DigitalBoardDataType.UIDataStruct uiDataStruct) {
+
+            if (_sportSettingStruct.sync_table != null && uiDataStruct.sync_struct_table && _sportSettingStruct.sync_table.TryGetValue(uiDataStruct.id, out int p_value))
+            {
+                uiDataStruct.value = p_value;
+            }
+
+            return uiDataStruct; 
+        }
+
         #region Event
         private void OnSimpleEventSystem(string id, object[] values) {
             if (id == MessageEventFlag.HsinpaBluetoothEvent.UIEvent.score && values.Length > 0)
@@ -114,30 +138,19 @@ namespace Hsinpa.Bluetooth
         private void OnScoreUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct) {
             Debug.Log("OnScoreUIChange " + uiDataStruct.id);
 
+
+            if (uiDataStruct.exclusive) {
+                var emptyCharSet = new DigitalBoardDataType.CharacterirticsData(10, MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable);
+                SendUIDataStructBLE(uiDataStruct, emptyCharSet, digitalBoardBluetoothManager.ScoreCharacteristic);
+                return;
+            }
+
             SendUIDataStructBLE(uiDataStruct, _scoreType, digitalBoardBluetoothManager.ScoreCharacteristic);
-            //if (uiDataStruct.is_increment) {
-
-            //    if (uiDataStruct.value >= 0)
-            //        _scoreType.Increment_Value(uiDataStruct.id);
-            //    else
-            //        _scoreType.Decrement_Value(uiDataStruct.id);
-            //} else {
-
-            //    _scoreType.Set_Value(uiDataStruct.id, uiDataStruct.value);
-            //}
-
-            //if (uiDataStruct.hide_bluetooth_event) return;
-
-            //DigitalBoardDataType.BluetoothDataStruct bluetoothDataStruct = new DigitalBoardDataType.BluetoothDataStruct() {
-            //    characteristic = digitalBoardBluetoothManager.ScoreCharacteristic,
-            //    data = _scoreType.Data.ToArray()
-            //};
-
-            //digitalBoardEventSender.SendBluetoothData(bluetoothDataStruct);
         }
 
         private void OnTimerUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct) {
-            Debug.Log("OnTimerUIChange " + uiDataStruct.id);
+            uiDataStruct = ReplaceDataStructWithTable(uiDataStruct);
+            Debug.Log("OnTimerUIChange " + uiDataStruct.id +", value " + uiDataStruct.value);
 
             switch (uiDataStruct.id) {
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Minute:
@@ -160,6 +173,15 @@ namespace Hsinpa.Bluetooth
                     SendUIDataStructBLE(uiDataStruct, _timeType, digitalBoardBluetoothManager.TimeCharacteristic);
                     break;
             }
+        }
+
+        private void OnInternalValueChange(string key, int value) {
+            SimpleEventSystem.Send( MessageEventFlag.HsinpaBluetoothEvent.UIEvent.ui_text, 
+                new DigitalBoardDataType.UIDataStruct() { 
+                    id = key,
+                    value = value
+                }
+            );
         }
 
         private void OnBluetoothConnect() {

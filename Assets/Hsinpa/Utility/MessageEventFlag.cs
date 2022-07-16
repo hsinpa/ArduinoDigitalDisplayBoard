@@ -7,12 +7,27 @@ namespace SimpleEvent.ID {
     {
         public class HsinpaBluetoothEvent {
 
+            public class SportMode {
+                public const string Default = "sport_mode@default";
+                public const string Basketball = "sport_mode@basketball";
+                public const string Volleyball = "sport_mode@volleyball";
+                public const string Badminton = "sport_mode@badminton";
+                public const string TableTennis = "sport_mode@tabletennis";
+                public const string Soccer = "sport_mode@soccer";
+                public const string Handball = "sport_mode@handball";
+                public const string GameRecord = "sport_mode@game_record";
+            }
+
             public class UIEvent {
                 public const string score = "event@ui_score";
                 public const string time = "event@ui_time";
                 public const string other = "event@ui_other";
 
+                public const string ui_text = "event@ui_text_sync";
                 public const string dispose = "event@dispose";
+
+                public const string sport_mode_view = "event@ui_sport_mode";
+                public const string digitalboard_mode_view = "event@ui_digitalboard_mode";
             }
 
             public class ScoreUI
@@ -79,6 +94,23 @@ namespace SimpleEvent.ID {
                 { TimeUI.Other_Second, 11},
             };
 
+            public struct SportSettingStruct {
+                public string id;
+                public string title;
+                public Dictionary<string, int> sync_table;
+            }
+
+
+            public static Dictionary<string, SportSettingStruct> SportSettingTable = new Dictionary<string, SportSettingStruct>() {
+                { SportMode.Default, new SportSettingStruct() { sync_table = new Dictionary<string, int>() } },
+                { SportMode.Basketball, new SportSettingStruct() {id = SportMode.Basketball, title = "Basketball", sync_table = new Dictionary<string, int>() { { TimeUI.Time_display_mode, 8} } } },
+                { SportMode.Volleyball, new SportSettingStruct() {id = SportMode.Volleyball, title = "Volleyball", sync_table = new Dictionary<string, int>() { { TimeUI.Time_display_mode, 2} } } },
+                { SportMode.Badminton, new SportSettingStruct() {id = SportMode.Badminton, title = "Badminton",sync_table = new Dictionary<string, int>() { { TimeUI.Time_display_mode, 2} } } },
+                { SportMode.TableTennis, new SportSettingStruct() {id = SportMode.TableTennis, title = "Table Tennis", sync_table = new Dictionary<string, int>() { { TimeUI.Time_display_mode, 2} } } },
+                { SportMode.Soccer, new SportSettingStruct() {id = SportMode.Soccer, title = "Soccer", sync_table = new Dictionary<string, int>() { { TimeUI.Time_display_mode, 2} } } },
+                { SportMode.Handball, new SportSettingStruct() {id = SportMode.Handball, title = "Handball", sync_table = new Dictionary<string, int>() { { TimeUI.Time_display_mode, 2} } } },
+                { SportMode.GameRecord, new SportSettingStruct() {id = SportMode.GameRecord, title = "Game Record", sync_table = new Dictionary<string, int>() } },
+            };
         }
     }
 }

@@ -4,11 +4,27 @@ using UnityEngine;
 using ArduinoBluetoothAPI;
 using System;
 using UnityEngine.Android;
+using Hsinpa.Utility;
+using SimpleEvent.ID;
+
 namespace Hsinpa.Bluetooth
 {
 
     public class DigitalBoardBluetoothManager : MonoBehaviour
     {
+        [SerializeField]
+        private GameObject hintModeView;
+
+        [SerializeField]
+        private SportGridLogic sportModeView;
+
+        [SerializeField]
+        private DigitalBoardView digitalBoardModeView;
+
+
+        [SerializeField]
+        private DigitlaBoardLogicHandler digitlaBoardLogicHandler;
+
         private BluetoothHelper helper;
         private LinkedList<BluetoothDevice> devices;
 
@@ -33,8 +49,11 @@ namespace Hsinpa.Bluetooth
         {
             try
             {
+                hintModeView.gameObject.SetActive(true);
+
+                SimpleEventSystem.CustomEventListener += OnSimpleEventSystem;
                 BluetoothHelper.BLE = true;
-                helper = BluetoothHelper.GetInstance("DISPLAY TEST SIG");
+                helper = BluetoothHelper.GetInstance("Scoreboard Remote One");
                 helper.OnConnected += OnConnected;
                 helper.OnConnectionFailed += OnConnectionFailed;
                 helper.OnScanEnded += OnScanEnded;
@@ -49,6 +68,7 @@ namespace Hsinpa.Bluetooth
                 scoreCharacteristic = new BluetoothHelperCharacteristic(scoreCharacteristicUUID, serviceUUID);
                 timeCharacteristic = new BluetoothHelperCharacteristic(timeCharacteristicUUID, serviceUUID);
                 otherCharacteristic = new BluetoothHelperCharacteristic(otherCharacteristicUUID, serviceUUID);
+
             }
             catch (Exception e)
             {
@@ -123,6 +143,8 @@ namespace Hsinpa.Bluetooth
             helper.WriteCharacteristic(timeCharacteristic, test_byte_event4);
             //helper.WriteCharacteristic(timeCharacteristic, test_byte_event5);
 
+            hintModeView.gameObject.SetActive(false);
+
             if (OnConnect != null)
                 OnConnect();
         }
@@ -163,6 +185,28 @@ namespace Hsinpa.Bluetooth
             helper.OnServiceNotFound -= OnServiceNotFound;
             helper.Disconnect();
             helper = null;
+        }
+
+        private void OnSimpleEventSystem(string id, object[] values)
+        {
+            if (id == MessageEventFlag.HsinpaBluetoothEvent.UIEvent.digitalboard_mode_view && values != null && values.Length > 0)
+            {
+                string sport_id = (string)values[0];
+
+                if (MessageEventFlag.HsinpaBluetoothEvent.SportSettingTable.TryGetValue(sport_id, out var sportSettingStruct)) {
+                    sportModeView.gameObject.SetActive(false);
+                    digitalBoardModeView.gameObject.SetActive(true);
+                    digitalBoardModeView.SetTitle(sportSettingStruct.title);
+                    digitlaBoardLogicHandler.SetSportStruct(sportSettingStruct);
+                    digitlaBoardLogicHandler.ResetDigitalBoard();
+                }
+            }
+
+            if (id == MessageEventFlag.HsinpaBluetoothEvent.UIEvent.sport_mode_view)
+            {
+                sportModeView.gameObject.SetActive(true);
+                digitalBoardModeView.gameObject.SetActive(false);
+            }
         }
 
         private void OnApplicationQuit()

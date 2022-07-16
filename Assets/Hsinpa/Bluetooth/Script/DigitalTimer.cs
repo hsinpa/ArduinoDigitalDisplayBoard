@@ -22,6 +22,7 @@ namespace Hsinpa.Bluetooth
         }
 
         public void StopTimer() {
+            if (!timer_state) return; 
             timer_state = false;
 
             leak_datetime = GetTimeDifferent();

@@ -17,6 +17,8 @@ namespace Hsinpa.Bluetooth
             private Dictionary<string, int> index_table;
             private int length;
 
+            public System.Action<string, int> OnValueChange;
+
             public CharacterirticsData(int length, Dictionary<string, int> index_table) {
                 this.length = length;
                 this.raw_data = new byte[length];
@@ -41,6 +43,9 @@ namespace Hsinpa.Bluetooth
                     byte convert_byte = Convert.ToByte(value);
                     //Debug.Log("convert_byte " + convert_byte);
                     this.raw_data[index] = convert_byte;
+
+                    if (OnValueChange != null)
+                        OnValueChange(key, value);
                 }
             }
 
@@ -62,6 +67,12 @@ namespace Hsinpa.Bluetooth
 
             public void Dispose() {
                 this.raw_data = new byte[length];
+
+                if (OnValueChange != null) {
+                    foreach (var indexKeyPair in index_table) {
+                        OnValueChange(indexKeyPair.Key, 0);
+                    }
+                }
             }
         }
 
@@ -73,6 +84,8 @@ namespace Hsinpa.Bluetooth
             public int value;
             public bool is_increment;
             public bool hide_bluetooth_event;
+            public bool sync_struct_table;
+            public bool exclusive;
         }
 
         public struct BluetoothDataStruct

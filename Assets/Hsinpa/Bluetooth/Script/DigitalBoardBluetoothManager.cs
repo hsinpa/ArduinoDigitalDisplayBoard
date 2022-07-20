@@ -73,6 +73,7 @@ namespace Hsinpa.Bluetooth
             catch (Exception e)
             {
                 Debug.LogError(e);
+                hintModeView.gameObject.SetActive(false);
             }
 
         }
@@ -126,21 +127,21 @@ namespace Hsinpa.Bluetooth
             //};
 
 
-            byte[] test_byte_event4 = new byte[11] {
-                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00
+            byte[] test_byte_event4 = new byte[12] {
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x05, 0x00
             };
 
-            //byte[] test_byte_event5 = new byte[11] {
-            //    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00
-            //};
+            byte[] test_byte_event5 = new byte[12] {
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00
+            };
 
             //byte[] test_byte_event = new byte[10] {
             //    0x09, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
             //};
-            helper.WriteCharacteristic(scoreCharacteristic, test_byte_event);
-            helper.WriteCharacteristic(scoreCharacteristic, test_byte_event2);
+            //helper.WriteCharacteristic(scoreCharacteristic, test_byte_event);
+            //helper.WriteCharacteristic(scoreCharacteristic, test_byte_event2);
             //helper.WriteCharacteristic(timeCharacteristic, test_byte_event3);
-            helper.WriteCharacteristic(timeCharacteristic, test_byte_event4);
+            //helper.WriteCharacteristic(timeCharacteristic, test_byte_event4);
             //helper.WriteCharacteristic(timeCharacteristic, test_byte_event5);
 
             hintModeView.gameObject.SetActive(false);

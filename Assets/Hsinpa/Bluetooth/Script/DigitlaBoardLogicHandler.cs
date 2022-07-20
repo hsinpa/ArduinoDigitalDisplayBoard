@@ -41,7 +41,7 @@ namespace Hsinpa.Bluetooth
 
         private void Awake()
         {
-            digitalBoardBluetoothManager.OnConnect += OnBluetoothConnect;
+            //digitalBoardBluetoothManager.OnConnect += OnBluetoothConnect;
             Hsinpa.Utility.SimpleEventSystem.Dispose();
             this._scoreType = new DigitalBoardDataType.CharacterirticsData(10, MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable);
             this._timeType = new DigitalBoardDataType.CharacterirticsData(12, MessageEventFlag.HsinpaBluetoothEvent.TimeIndexTable);
@@ -73,21 +73,29 @@ namespace Hsinpa.Bluetooth
             _timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Minute, p_digital_timer.GetMinute());
             _timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Second, p_digital_timer.GetSecond());
 
+
+            //Only allow testing mode to send signal per second
+            if (this._sportSettingStruct.id != MessageEventFlag.HsinpaBluetoothEvent.SportMode.Default) return;
             //Debug.Log(p_digital_timer.GetSecond());
 
-            //DigitalBoardDataType.BluetoothDataStruct bluetoothDataStruct = new DigitalBoardDataType.BluetoothDataStruct()
-            //{
-            //    characteristic = digitalBoardBluetoothManager.TimeCharacteristic,
-            //    data = _timeType.Data.ToArray()
-            //};
+            DigitalBoardDataType.BluetoothDataStruct bluetoothDataStruct = new DigitalBoardDataType.BluetoothDataStruct()
+            {
+                characteristic = digitalBoardBluetoothManager.TimeCharacteristic,
+                data = _timeType.Data.ToArray()
+            };
 
-            //digitalBoardEventSender.SendBluetoothData(bluetoothDataStruct);
+            digitalBoardEventSender.SendBluetoothData(bluetoothDataStruct);
         }
 
         private void SendUIDataStructBLE(DigitalBoardDataType.UIDataStruct uiDataStruct,
             DigitalBoardDataType.CharacterirticsData characteristic_data,
             BluetoothHelperCharacteristic ble_characteristic) {
 
+            if (uiDataStruct.max_value > 0 && uiDataStruct.max_value <= characteristic_data.GetValue(uiDataStruct.id)) {
+                Debug.Log($"SendUIDataStructBLE Warning : { uiDataStruct.id } Max value is reach");
+                return;
+            }
+            
             if (uiDataStruct.is_increment)
             {
                 if (uiDataStruct.value >= 0)

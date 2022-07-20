@@ -82,6 +82,7 @@ namespace Hsinpa.Bluetooth
             public string id;
             public string category;
             public int value;
+            public int max_value;
             public bool is_increment;
             public bool hide_bluetooth_event;
             public bool sync_struct_table;

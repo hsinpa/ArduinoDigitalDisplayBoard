@@ -5,11 +5,17 @@ using UnityEngine;
 namespace SimpleEvent.ID {
     public class MessageEventFlag : MonoBehaviour
     {
+
+        public const int MaxTurn = 7;
+        public const int MaxFoul = 9;
+
+        public static readonly byte[] ResetTimerCommand = new byte[12] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00 };
+
         public class HsinpaBluetoothEvent {
 
             public class SportMode {
                 public const string Default = "sport_mode@default";
-                public const string DisplayWord = "sport_mode@display_word";
+                //public const string DisplayWord = "sport_mode@display_word";
 
                 public const string Basketball = "sport_mode@basketball";
                 public const string Volleyball = "sport_mode@volleyball";
@@ -25,11 +31,18 @@ namespace SimpleEvent.ID {
                 public const string time = "event@ui_time";
                 public const string other = "event@ui_other";
 
+                public const string functions = "event@functions";
                 public const string ui_text = "event@ui_text_sync";
                 public const string dispose = "event@dispose";
 
                 public const string sport_mode_view = "event@ui_sport_mode";
+                public const string word_display_mode_view = "event@ui_word_display_mode";
                 public const string digitalboard_mode_view = "event@ui_digitalboard_mode";
+            }
+
+            public class FunctionUI
+            {
+                public const string Next_Turn = "function@next_turn";
             }
 
             public class ScoreUI
@@ -65,6 +78,8 @@ namespace SimpleEvent.ID {
                 public const string Start_Timer = "time_event@start_timer";
                 public const string Stop_Timer = "time_event@stop_timer";
                 public const string Reset_Timer = "time_event@reset_timer";
+
+                public const string Sync_Time = "time_event@sync_real_time";
             }
 
             public static Dictionary<string, int> ScoreIndexTable = new Dictionary<string, int>() {

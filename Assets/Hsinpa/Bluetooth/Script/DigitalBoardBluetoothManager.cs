@@ -12,6 +12,7 @@ namespace Hsinpa.Bluetooth
 
     public class DigitalBoardBluetoothManager : MonoBehaviour
     {
+        [Header("UI View")]
         [SerializeField]
         private GameObject hintModeView;
 
@@ -21,7 +22,10 @@ namespace Hsinpa.Bluetooth
         [SerializeField]
         private DigitalBoardView digitalBoardModeView;
 
+        [SerializeField]
+        private DigitalCharacterView digitalCharacterView;
 
+        [Header("BLE")]
         [SerializeField]
         private DigitlaBoardLogicHandler digitlaBoardLogicHandler;
 
@@ -32,6 +36,7 @@ namespace Hsinpa.Bluetooth
         private const string scoreCharacteristicUUID = "6344A90E-C885-4060-8A3C-C4D100000008";
         private const string timeCharacteristicUUID = "6344A90E-C885-4060-8A3C-C4D100000009";
         private const string otherCharacteristicUUID = "6344A90E-C885-4060-8A3C-C4D10000000A";
+        private const string wordCharacteristicUUID = "6344A90E-C885-4060-8A3C-C4D10000000B";
 
         private BluetoothHelperCharacteristic scoreCharacteristic;
         public BluetoothHelperCharacteristic ScoreCharacteristic => scoreCharacteristic;
@@ -41,6 +46,9 @@ namespace Hsinpa.Bluetooth
 
         private BluetoothHelperCharacteristic otherCharacteristic;
         public BluetoothHelperCharacteristic OtherCharacteristic => otherCharacteristic;
+
+        private BluetoothHelperCharacteristic wordCharacteristic;
+        public BluetoothHelperCharacteristic WordCharacteristic => wordCharacteristic;
 
         public System.Action OnConnect;
         public System.Action OnDisconnect;
@@ -68,7 +76,7 @@ namespace Hsinpa.Bluetooth
                 scoreCharacteristic = new BluetoothHelperCharacteristic(scoreCharacteristicUUID, serviceUUID);
                 timeCharacteristic = new BluetoothHelperCharacteristic(timeCharacteristicUUID, serviceUUID);
                 otherCharacteristic = new BluetoothHelperCharacteristic(otherCharacteristicUUID, serviceUUID);
-
+                wordCharacteristic = new BluetoothHelperCharacteristic(wordCharacteristicUUID, serviceUUID);
             }
             catch (Exception e)
             {
@@ -198,8 +206,9 @@ namespace Hsinpa.Bluetooth
                     sportModeView.gameObject.SetActive(false);
                     digitalBoardModeView.gameObject.SetActive(true);
                     digitalBoardModeView.SetTitle(sportSettingStruct.title);
-                    digitlaBoardLogicHandler.SetSportStruct(sportSettingStruct);
                     digitlaBoardLogicHandler.ResetDigitalBoard();
+
+                    digitlaBoardLogicHandler.SetSportStruct(sportSettingStruct);
                 }
             }
 
@@ -207,6 +216,14 @@ namespace Hsinpa.Bluetooth
             {
                 sportModeView.gameObject.SetActive(true);
                 digitalBoardModeView.gameObject.SetActive(false);
+                digitalCharacterView.gameObject.SetActive(false);
+                digitlaBoardLogicHandler.Dispose();
+            }
+
+            if (id == MessageEventFlag.HsinpaBluetoothEvent.UIEvent.word_display_mode_view)
+            {
+                sportModeView.gameObject.SetActive(false);
+                digitalCharacterView.gameObject.SetActive(true);
             }
         }
 

@@ -57,10 +57,16 @@ namespace Hsinpa.Bluetooth
                 return 0;
             }
 
+            public void Set_Raw_Value(int index, System.Int32 value) {
+                if (index >= 0 && index < length) {
+                    this.raw_data[index] = Convert.ToByte(value);
+                }
+            }
+
             public void DebugLog() {
                 string str = "";
                 for (int i = 0; i < this.length; i++) {
-                    str += raw_data[i];
+                    str += raw_data[i] +", ";
                 }
                 Debug.Log("convert_byte \n" + str);
             }

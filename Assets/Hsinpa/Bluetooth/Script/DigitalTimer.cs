@@ -11,6 +11,9 @@ namespace Hsinpa.Bluetooth
         private bool timer_state = false;
         public bool TimerState => timer_state;
 
+        public enum Type {RealTime, Timer };
+        public Type time_type = Type.Timer;
+
         public DigitalTimer() {
             Dispose();
         }
@@ -35,16 +38,25 @@ namespace Hsinpa.Bluetooth
 
         public System.Int32 GetHour()
         {
+            if (time_type == Type.RealTime)
+                return System.DateTime.Now.Hour;
+
             return GetTimeDifferent().Hours;
         }
 
         public System.Int32 GetMinute()
         {
+            if (time_type == Type.RealTime)
+                return System.DateTime.Now.Minute;
+
             return GetTimeDifferent().Minutes;
         }
 
         public System.Int32 GetSecond()
         {
+            if (time_type == Type.RealTime)
+                return System.DateTime.Now.Second;
+
             return GetTimeDifferent().Seconds;
         }
 

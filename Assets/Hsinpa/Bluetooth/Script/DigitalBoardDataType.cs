@@ -19,8 +19,12 @@ namespace Hsinpa.Bluetooth
 
             public System.Action<string, int> OnValueChange;
 
-            public CharacterirticsData(int length, Dictionary<string, int> index_table) {
+            private BluetoothHelperCharacteristic _bleCharacteristic;
+            public BluetoothHelperCharacteristic BLECharacteristic => _bleCharacteristic;
+
+            public CharacterirticsData(int length, BluetoothHelperCharacteristic bleCharacteristic, Dictionary<string, int> index_table) {
                 this.length = length;
+                this._bleCharacteristic = bleCharacteristic;
                 this.raw_data = new byte[length];
                 this.index_table = index_table;
             }

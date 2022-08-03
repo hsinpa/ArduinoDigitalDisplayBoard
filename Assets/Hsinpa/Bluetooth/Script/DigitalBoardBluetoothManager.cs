@@ -21,6 +21,7 @@ namespace Hsinpa.Bluetooth
 
         [SerializeField]
         private DigitalBoardView digitalBoardModeView;
+        public DigitalBoardView DigitalBoardModeView => digitalBoardModeView;
 
         [SerializeField]
         private DigitalCharacterView digitalCharacterView;
@@ -206,6 +207,10 @@ namespace Hsinpa.Bluetooth
                     sportModeView.gameObject.SetActive(false);
                     digitalBoardModeView.gameObject.SetActive(true);
                     digitalBoardModeView.SetTitle(sportSettingStruct.title);
+                    digitalBoardModeView.SetSyncTimeMode(sport_id == MessageEventFlag.HsinpaBluetoothEvent.SportMode.Volleyball ||
+                                                         sport_id == MessageEventFlag.HsinpaBluetoothEvent.SportMode.TableTennis ||
+                                                         sport_id == MessageEventFlag.HsinpaBluetoothEvent.SportMode.Badminton);
+
                     digitlaBoardLogicHandler.ResetDigitalBoard();
 
                     digitlaBoardLogicHandler.SetSportStruct(sportSettingStruct);

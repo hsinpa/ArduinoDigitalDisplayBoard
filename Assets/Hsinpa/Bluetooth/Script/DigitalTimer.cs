@@ -11,8 +11,8 @@ namespace Hsinpa.Bluetooth
         private bool timer_state = false;
         public bool TimerState => timer_state;
 
-        public enum Type {RealTime, Timer };
-        public Type time_type = Type.Timer;
+        public enum Type {RealTime, Timer_CountUp, Timer_CountDown };
+        public Type time_type = Type.Timer_CountUp;
 
         public DigitalTimer() {
             Dispose();

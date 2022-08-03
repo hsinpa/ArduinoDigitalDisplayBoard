@@ -17,6 +17,15 @@ namespace Hsinpa.Bluetooth
         [SerializeField]
         private Button start_timer;
 
+        [SerializeField]
+        private Button stop_timer;
+
+        [SerializeField]
+        private Button reset_timer;
+
+        [SerializeField]
+        private Button sync_timer;
+
         private void Start()
         {
             SimpleEventSystem.CustomEventListener += OnSimpleEventSystem;
@@ -54,6 +63,11 @@ namespace Hsinpa.Bluetooth
             titleText.text = title.ToUpper();
         }
 
-        
+        public void SetSyncTimeMode(bool enter_sync_time_mode) {
+            start_timer.gameObject.SetActive(!enter_sync_time_mode);
+            stop_timer.gameObject.SetActive(!enter_sync_time_mode);
+            reset_timer.gameObject.SetActive(!enter_sync_time_mode);
+            sync_timer.gameObject.SetActive(enter_sync_time_mode);
+        }
     }
 }

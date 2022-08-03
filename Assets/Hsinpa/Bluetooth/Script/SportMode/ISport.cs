@@ -1,3 +1,5 @@
+using Hsinpa.Bluetooth.Model;
+using SimpleEvent.ID;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +9,18 @@ namespace Hsinpa.Bluetooth.Sport
 {
     public interface ISport
     {
-        void SetupLayout();
-        void ExecNextTime(DigitalBoardDataType.CharacterirticsData scoreType);
+
+        DigitalMessageSRP SRP { get; }
+        MessageEventFlag.HsinpaBluetoothEvent.SportSettingStruct SportStruct { get; }
+
+        void Setup(DigitlaBoardLogicHandler digitlaBoardLogicHandler, MessageEventFlag.HsinpaBluetoothEvent.SportSettingStruct sportStruct, 
+                    BLEDataModel bleDataModel, DigitalBoardView digitalBoardView);
+
+        void SetSportSRP(DigitalMessageSRP srp);
+
+        void Init();
+
+        void OnTimerUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct);
+        void OnFunctionUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct);
     }
 }

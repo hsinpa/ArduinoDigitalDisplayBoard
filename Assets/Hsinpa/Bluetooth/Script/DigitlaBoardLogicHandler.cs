@@ -1,9 +1,11 @@
+using ArduinoBluetoothAPI;
+using Hsinpa.Bluetooth.Model;
+using Hsinpa.Bluetooth.Sport;
 using Hsinpa.Utility;
 using SimpleEvent.ID;
-using UnityEngine;
-
 using System.Linq;
-using ArduinoBluetoothAPI;
+using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Hsinpa.Bluetooth
 {
@@ -20,25 +22,22 @@ namespace Hsinpa.Bluetooth
         private DigitalMessageSRP boostConfigSRP;
 
         [SerializeField]
-        private DigitalMessageSRP TT_Vol_Bad_ConfigSRP;
+        private DigitalMessageSRP TBV_ConfigSRP;
 
-        private DigitalBoardDataType.CharacterirticsData _scoreType;
-        private DigitalBoardDataType.CharacterirticsData _timeType;
-        private DigitalBoardDataType.CharacterirticsData _otherType;
+        private BLEDataModel _bleDataModel;
 
         private SportLogicFuncs _sportLogicFuncs;
+        public SportLogicFuncs SportLogicFuncs => _sportLogicFuncs;
 
-        private DigitalTimer _digitalTimer;
-        private MessageEventFlag.HsinpaBluetoothEvent.SportSettingStruct _sportSettingStruct;
+        private ISport _currentSport;
+
         private const float update_period = 0.5f;
         private float update_record = 0;
 
-
         public void SetSportStruct(MessageEventFlag.HsinpaBluetoothEvent.SportSettingStruct sportSettingStruct) {
-            this._sportSettingStruct = sportSettingStruct;
-
-            if (TT_Vol_Bad_ConfigSRP.ConstraintPass(this._sportSettingStruct.id))
-                TT_Vol_Bad_ConfigSRP.Execute();
+            _currentSport = GetSport(sportSettingStruct.id);
+            _currentSport.Setup(this, sportSettingStruct, this._bleDataModel, digitalBoardBluetoothManager.DigitalBoardModeView);
+            _currentSport.Init();
         }
 
         public void ResetDigitalBoard()
@@ -51,15 +50,17 @@ namespace Hsinpa.Bluetooth
         {
             //digitalBoardBluetoothManager.OnConnect += OnBluetoothConnect;
             Hsinpa.Utility.SimpleEventSystem.Dispose();
-            this._scoreType = new DigitalBoardDataType.CharacterirticsData(10, MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable);
-            this._timeType = new DigitalBoardDataType.CharacterirticsData(12, MessageEventFlag.HsinpaBluetoothEvent.TimeIndexTable);
-            //this._otherType = new DigitalBoardDataType.CharacterirticsData(14);
 
-            this._digitalTimer = new DigitalTimer();
+            this._bleDataModel = new BLEDataModel(
+                scoreType: new DigitalBoardDataType.CharacterirticsData(10, digitalBoardBluetoothManager.ScoreCharacteristic, MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable),
+                timeType: new DigitalBoardDataType.CharacterirticsData(12, digitalBoardBluetoothManager.TimeCharacteristic,  MessageEventFlag.HsinpaBluetoothEvent.TimeIndexTable),
+                otherType: new DigitalBoardDataType.CharacterirticsData(14, digitalBoardBluetoothManager.OtherCharacteristic, null)
+            );
+
             this._sportLogicFuncs = new SportLogicFuncs(this, digitalBoardEventSender, digitalBoardBluetoothManager);
 
-            _scoreType.OnValueChange += OnInternalValueChange;
-            _timeType.OnValueChange += OnInternalValueChange;
+            this._bleDataModel.ScoreType.OnValueChange += OnInternalValueChange;
+            this._bleDataModel.TimeType.OnValueChange += OnInternalValueChange;
         }
 
         private void Start()
@@ -69,39 +70,47 @@ namespace Hsinpa.Bluetooth
 
         private void Update()
         {
-            if (this._digitalTimer != null && _digitalTimer.TimerState && Time.time >= update_record)
+            if (Time.time >= update_record)
             {
-                UpdateTimeData(this._digitalTimer, this._sportSettingStruct.id == MessageEventFlag.HsinpaBluetoothEvent.SportMode.Default);
+                this._bleDataModel.UpdateTime();
+
+                if (this._currentSport.SportStruct.id == MessageEventFlag.HsinpaBluetoothEvent.SportMode.Default)
+                    SyncTimeData();
 
                 update_record = Time.time + update_period;
             }
         }
 
-        private void UpdateTimeData(DigitalTimer p_digital_timer, bool send_ble) {
-            _timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Hour, p_digital_timer.GetHour());
-            _timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Minute, p_digital_timer.GetMinute());
-            _timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Second, p_digital_timer.GetSecond());
+        private void SyncTimeData() {
 
             //Debug.Log(p_digital_timer.GetHour());
             //Debug.Log(p_digital_timer.GetMinute());
             //Debug.Log(p_digital_timer.GetSecond());
 
-            //Only allow testing mode to send signal per second
-            if (!send_ble) return;
-            //Debug.Log(p_digital_timer.GetSecond());
-
             DigitalBoardDataType.BluetoothDataStruct bluetoothDataStruct = new DigitalBoardDataType.BluetoothDataStruct()
             {
                 characteristic = digitalBoardBluetoothManager.TimeCharacteristic,
-                data = _timeType.Data.ToArray()
+                data = this._bleDataModel.TimeType.Data.ToArray()
             };
 
             digitalBoardEventSender.SendBluetoothData(bluetoothDataStruct);
         }
 
+
+        public async void SendUIDataStructBLE(
+            DigitalBoardDataType.UIDataStruct[] uiDataStruct,
+            DigitalBoardDataType.CharacterirticsData characteristic_data)
+        {
+            if (uiDataStruct == null) return;
+
+            foreach (var uiData in uiDataStruct) {
+                await Task.Yield();
+                SendUIDataStructBLE(uiData, characteristic_data);
+            }
+        }
+
         public void SendUIDataStructBLE(DigitalBoardDataType.UIDataStruct uiDataStruct,
-            DigitalBoardDataType.CharacterirticsData characteristic_data,
-            BluetoothHelperCharacteristic ble_characteristic) {
+            DigitalBoardDataType.CharacterirticsData characteristic_data) {
 
             if (uiDataStruct.max_value > 0 && uiDataStruct.max_value <= characteristic_data.GetValue(uiDataStruct.id)) {
                 Debug.Log($"SendUIDataStructBLE Warning : { uiDataStruct.id } Max value is reach");
@@ -125,21 +134,11 @@ namespace Hsinpa.Bluetooth
 
             DigitalBoardDataType.BluetoothDataStruct bluetoothDataStruct = new DigitalBoardDataType.BluetoothDataStruct()
             {
-                characteristic = ble_characteristic,
+                characteristic = characteristic_data.BLECharacteristic,
                 data = characteristic_data.Data.ToArray()
             };
 
             digitalBoardEventSender.SendBluetoothData(bluetoothDataStruct);
-        }
-
-        private DigitalBoardDataType.UIDataStruct ReplaceDataStructWithTable(DigitalBoardDataType.UIDataStruct uiDataStruct) {
-
-            if (_sportSettingStruct.sync_table != null && uiDataStruct.sync_struct_table && _sportSettingStruct.sync_table.TryGetValue(uiDataStruct.id, out int p_value))
-            {
-                uiDataStruct.value = p_value;
-            }
-
-            return uiDataStruct; 
         }
 
         #region Event
@@ -166,60 +165,53 @@ namespace Hsinpa.Bluetooth
 
 
             if (uiDataStruct.exclusive) {
-                var emptyCharSet = new DigitalBoardDataType.CharacterirticsData(10, MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable);
-                SendUIDataStructBLE(uiDataStruct, emptyCharSet, digitalBoardBluetoothManager.ScoreCharacteristic);
+                var emptyCharSet = new DigitalBoardDataType.CharacterirticsData(10, digitalBoardBluetoothManager.ScoreCharacteristic, MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable);
+                SendUIDataStructBLE(uiDataStruct, emptyCharSet);
                 return;
             }
 
-            SendUIDataStructBLE(uiDataStruct, _scoreType, digitalBoardBluetoothManager.ScoreCharacteristic);
+            SendUIDataStructBLE(uiDataStruct, this._bleDataModel.ScoreType);
         }
 
         private void OnTimerUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct) {
-            uiDataStruct = ReplaceDataStructWithTable(uiDataStruct);
             Debug.Log("OnTimerUIChange " + uiDataStruct.id +", value " + uiDataStruct.value);
 
             switch (uiDataStruct.id) {
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Sync_Time:
-                    _digitalTimer.time_type = DigitalTimer.Type.RealTime;
-                    _digitalTimer.StartTimer();
+                    this._bleDataModel.DigitalTimer.time_type = DigitalTimer.Type.RealTime;
+                    this._bleDataModel.DigitalTimer.StartTimer();
 
-                    UpdateTimeData(_digitalTimer, send_ble: false);
+                    this._bleDataModel.UpdateTime();
                     break;
 
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Start_Timer:
-                    _digitalTimer.time_type = DigitalTimer.Type.Timer;
-                    _digitalTimer.StartTimer();
+                    this._bleDataModel.DigitalTimer.time_type = DigitalTimer.Type.Timer_CountUp;
+                    this._bleDataModel.DigitalTimer.StartTimer();
                     break;
 
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Stop_Timer:
-                    _digitalTimer.StopTimer();
+                    this._bleDataModel.DigitalTimer.StopTimer();
                     break;
 
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Reset_Timer:
-                    _digitalTimer.ResetTimer();
-                    _timeType.Dispose();
+                    this._bleDataModel.DigitalTimer.ResetTimer();
+                    this._bleDataModel.TimeType.Dispose();
                     break;
 
-                case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Counting_mode:
-                case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Time_display_mode:
-                    SendUIDataStructBLE(uiDataStruct, _timeType, digitalBoardBluetoothManager.TimeCharacteristic);
-                    break;
             }
         }
 
         private void OnFunctionUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct)
         {
-            uiDataStruct = ReplaceDataStructWithTable(uiDataStruct);
             Debug.Log("OnFunctionUIChange " + uiDataStruct.id);
 
             switch (uiDataStruct.id)
             {
                 case MessageEventFlag.HsinpaBluetoothEvent.FunctionUI.Next_Turn:
-                    _sportLogicFuncs.NextTurn(_scoreType, _timeType);
+                    _sportLogicFuncs.NextTurn(this._bleDataModel.ScoreType, this._bleDataModel.TimeType);
                     break;
             }
         }
-
 
         private void OnInternalValueChange(string key, int value) {
             SimpleEventSystem.Send( MessageEventFlag.HsinpaBluetoothEvent.UIEvent.ui_text, 
@@ -243,13 +235,37 @@ namespace Hsinpa.Bluetooth
 
         public void Dispose()
         {
-            _scoreType.Dispose();
-            _timeType.Dispose();
-            _digitalTimer.ResetTimer();
+            this._bleDataModel.Dispose();
+            this._bleDataModel.DigitalTimer.ResetTimer();
 
             SportLogicFuncs.CleanDigitalBoard(digitalBoardBluetoothManager, digitalBoardEventSender);
         }
 
         #endregion
+
+        private ISport GetSport(string id) {
+            switch (id) {
+                case MessageEventFlag.HsinpaBluetoothEvent.SportMode.Badminton:
+                case MessageEventFlag.HsinpaBluetoothEvent.SportMode.Volleyball:
+                case MessageEventFlag.HsinpaBluetoothEvent.SportMode.TableTennis:
+
+                    var tbvSport = new TBVSport();
+                        tbvSport.SetSportSRP(TBV_ConfigSRP);
+
+                    return tbvSport;
+
+                case MessageEventFlag.HsinpaBluetoothEvent.SportMode.Basketball:
+                    break;
+
+                case MessageEventFlag.HsinpaBluetoothEvent.SportMode.Soccer:
+                    break;
+
+                case MessageEventFlag.HsinpaBluetoothEvent.SportMode.Handball:
+                    break;
+            
+            }
+
+            return new TBVSport();
+        }
     }
 }

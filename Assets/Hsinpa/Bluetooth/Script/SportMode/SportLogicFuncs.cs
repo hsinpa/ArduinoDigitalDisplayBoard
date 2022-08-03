@@ -66,7 +66,7 @@ namespace Hsinpa.Bluetooth
                     category = MessageEventFlag.HsinpaBluetoothEvent.UIEvent.score,
                     value = 0
                 }, 
-                scoreType, _digitalBoardBluetoothManager.ScoreCharacteristic);
+                scoreType);
         }
 
         public void SyncTimeValue(DigitalBoardDataType.CharacterirticsData timeType)

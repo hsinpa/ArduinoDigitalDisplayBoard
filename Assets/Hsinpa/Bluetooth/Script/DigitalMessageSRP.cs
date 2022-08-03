@@ -15,6 +15,9 @@ namespace Hsinpa.Bluetooth
         public DigitalBoardDataType.UIDataStruct[] UIDataStructs => uiDataStructs;
 
         [SerializeField]
+        private DigitalBoardDataType.UIDataStruct[] uniqueDataStruct = new DigitalBoardDataType.UIDataStruct[0];
+
+        [SerializeField]
         private string[] constraint_array = new string[0];
         public string[] Constraint_Array => constraint_array;
 
@@ -32,5 +35,19 @@ namespace Hsinpa.Bluetooth
             if (constraint_array == null) return true;
             return constraint_array.Contains(id);
         }
+
+        public int GetUniqueDataStructWithTable(string id)
+        {
+            int length = uniqueDataStruct.Length;
+
+            for (int i = 0; i < length; i++)
+            {
+                if (uniqueDataStruct[i].id == id)
+                    return uniqueDataStruct[i].value;
+            }
+
+            return -1;
+        }
+
     }
 }

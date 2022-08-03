@@ -113,19 +113,18 @@ namespace SimpleEvent.ID {
             public struct SportSettingStruct {
                 public string id;
                 public string title;
-                public Dictionary<string, int> sync_table;
             }
 
 
             public static Dictionary<string, SportSettingStruct> SportSettingTable = new Dictionary<string, SportSettingStruct>() {
-                { SportMode.Default, new SportSettingStruct() { id = SportMode.Default, title = "Internal Testing", sync_table = new Dictionary<string, int>()  { { TimeUI.Time_display_mode, 5}, { TimeUI.Counting_mode, 3 } } } },
-                { SportMode.Basketball, new SportSettingStruct() {id = SportMode.Basketball, title = "Basketball", sync_table = new Dictionary<string, int>() { { TimeUI.Time_display_mode, 8}, { TimeUI.Counting_mode, 1 } } } },
-                { SportMode.Volleyball, new SportSettingStruct() {id = SportMode.Volleyball, title = "Volleyball", sync_table = new Dictionary<string, int>() { { TimeUI.Time_display_mode, 2}, { TimeUI.Counting_mode, 1 } } } },
-                { SportMode.Badminton, new SportSettingStruct() {id = SportMode.Badminton, title = "Badminton",sync_table = new Dictionary<string, int>() { { TimeUI.Time_display_mode, 2}, { TimeUI.Counting_mode, 1 } } } },
-                { SportMode.TableTennis, new SportSettingStruct() {id = SportMode.TableTennis, title = "Table Tennis", sync_table = new Dictionary<string, int>() { { TimeUI.Time_display_mode, 2}, { TimeUI.Counting_mode, 1 } } } },
-                { SportMode.Soccer, new SportSettingStruct() {id = SportMode.Soccer, title = "Soccer", sync_table = new Dictionary<string, int>() { { TimeUI.Time_display_mode, 2}, { TimeUI.Counting_mode, 1 } } } },
-                { SportMode.Handball, new SportSettingStruct() {id = SportMode.Handball, title = "Handball", sync_table = new Dictionary<string, int>() { { TimeUI.Time_display_mode, 2}, { TimeUI.Counting_mode, 1 } } } },
-                { SportMode.GameRecord, new SportSettingStruct() {id = SportMode.GameRecord, title = "Game Record", sync_table = new Dictionary<string, int>() } },
+                { SportMode.Default, new SportSettingStruct() { id = SportMode.Default, title = "Internal Testing" } },
+                { SportMode.Basketball, new SportSettingStruct() {id = SportMode.Basketball, title = "Basketball"} },
+                { SportMode.Volleyball, new SportSettingStruct() {id = SportMode.Volleyball, title = "Volleyball" } },
+                { SportMode.Badminton, new SportSettingStruct() {id = SportMode.Badminton, title = "Badminton" } },
+                { SportMode.TableTennis, new SportSettingStruct() {id = SportMode.TableTennis, title = "Table Tennis" } },
+                { SportMode.Soccer, new SportSettingStruct() {id = SportMode.Soccer, title = "Soccer"} },
+                { SportMode.Handball, new SportSettingStruct() {id = SportMode.Handball, title = "Handball" } },
+                { SportMode.GameRecord, new SportSettingStruct() {id = SportMode.GameRecord, title = "Game Record" } },
             };
         }
     }

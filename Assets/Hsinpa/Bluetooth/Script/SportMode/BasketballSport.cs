@@ -1,18 +1,54 @@
+using Hsinpa.Bluetooth.Model;
+using SimpleEvent.ID;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasketballSport : MonoBehaviour
+namespace Hsinpa.Bluetooth.Sport
 {
-    // Start is called before the first frame update
-    void Start()
+    public class BasketballSport : ISport
     {
-        
-    }
+        DigitlaBoardLogicHandler _digitlaBoardLogicHandler;
+        BLEDataModel _bleDataModel;
+        DigitalBoardView _digitalBoardView;
+        DigitalMessageSRP _digitalMessageSRP;
+        MessageEventFlag.HsinpaBluetoothEvent.SportSettingStruct _sportStruct;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public DigitalMessageSRP SRP => _digitalMessageSRP;
+
+        public MessageEventFlag.HsinpaBluetoothEvent.SportSettingStruct SportStruct => _sportStruct;
+
+
+        public void SetSportSRP(DigitalMessageSRP srp)
+        {
+            this._digitalMessageSRP = srp;
+        }
+
+        public void Setup(DigitlaBoardLogicHandler digitlaBoardLogicHandler, MessageEventFlag.HsinpaBluetoothEvent.SportSettingStruct sportStruct, BLEDataModel bleDataModel, DigitalBoardView digitalBoardView)
+        {
+            this._digitlaBoardLogicHandler = digitlaBoardLogicHandler;
+            this._sportStruct = sportStruct;
+            this._bleDataModel = bleDataModel;
+            this._digitalBoardView = digitalBoardView;
+        }
+
+        public void Exist()
+        {
+        }
+
+        public void Init()
+        {
+            _digitalBoardView.Action_Timer.SetBasketballTimeMode();
+        }
+
+        public void OnFunctionUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct)
+        {
+        }
+
+        public void OnTimerUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct)
+        {
+        }
+
+
     }
 }

@@ -20,7 +20,20 @@ namespace Hsinpa.Bluetooth
             this._digitalBoardBluetoothManager = digitalBoardBluetoothManager;
         }
 
-        public async void NextTurn(DigitalBoardDataType.CharacterirticsData scoreType, DigitalBoardDataType.CharacterirticsData timeType ) {
+        public void NextTurn(DigitalBoardDataType.CharacterirticsData scoreType)
+        {
+            int turn_count = scoreType.GetValue(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.Sports_times);
+            if (turn_count >= MessageEventFlag.MaxTurn)
+            {
+                Debug.LogWarning("NextTurn fail, max turn count exceed");
+                return;
+            }
+
+            scoreType.Increment_Value(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.Sports_times);
+            SyncScoreValue(scoreType);
+        }
+
+        public async void NextTurn_HigherScoreWin(DigitalBoardDataType.CharacterirticsData scoreType, DigitalBoardDataType.CharacterirticsData timeType ) {
 
             ExecNextTurn(ref scoreType, ref timeType);
 

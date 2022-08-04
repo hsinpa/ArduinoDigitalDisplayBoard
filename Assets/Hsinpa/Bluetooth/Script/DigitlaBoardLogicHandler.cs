@@ -18,11 +18,15 @@ namespace Hsinpa.Bluetooth
         [SerializeField]
         private DigitalBoardEventSender digitalBoardEventSender;
 
+        [Header("SRP Config")]
         [SerializeField]
         private DigitalMessageSRP boostConfigSRP;
 
         [SerializeField]
         private DigitalMessageSRP TBV_ConfigSRP;
+
+        [SerializeField]
+        private DigitalMessageSRP Basketball_ConfigSRP;
 
         private BLEDataModel _bleDataModel;
 
@@ -37,19 +41,16 @@ namespace Hsinpa.Bluetooth
         public void SetSportStruct(MessageEventFlag.HsinpaBluetoothEvent.SportSettingStruct sportSettingStruct) {
             _currentSport = GetSport(sportSettingStruct.id);
             _currentSport.Setup(this, sportSettingStruct, this._bleDataModel, digitalBoardBluetoothManager.DigitalBoardModeView);
+
+            if (_currentSport.SRP.ConstraintPass(sportSettingStruct.id))
+                _currentSport.SRP.Execute();
+
             _currentSport.Init();
         }
 
-        public void ResetDigitalBoard()
+        public void SetUp()
         {
-            Dispose();
-            OnBluetoothConnect();
-        }
-
-        private void Awake()
-        {
-            //digitalBoardBluetoothManager.OnConnect += OnBluetoothConnect;
-            Hsinpa.Utility.SimpleEventSystem.Dispose();
+            digitalBoardBluetoothManager.OnConnect += OnBluetoothConnect;
 
             this._bleDataModel = new BLEDataModel(
                 scoreType: new DigitalBoardDataType.CharacterirticsData(10, digitalBoardBluetoothManager.ScoreCharacteristic, MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable),
@@ -61,18 +62,21 @@ namespace Hsinpa.Bluetooth
 
             this._bleDataModel.ScoreType.OnValueChange += OnInternalValueChange;
             this._bleDataModel.TimeType.OnValueChange += OnInternalValueChange;
+
+            SimpleEventSystem.CustomEventListener += OnSimpleEventSystem;
         }
 
-        private void Start()
+        public void ResetDigitalBoard()
         {
-            SimpleEventSystem.CustomEventListener += OnSimpleEventSystem;
-            this._bleDataModel.PrimaryTimer.StartTimer();
-            this._bleDataModel.SecondaryTimer.StartTimer(target_second: 30);
+            Dispose();
+
+            if (boostConfigSRP != null)
+                boostConfigSRP.Execute();
         }
 
         private void Update()
         {
-            if (Time.time >= update_record)
+            if (Time.time >= update_record && this._bleDataModel != null)
             {
                 this._bleDataModel.UpdateTime();
 
@@ -159,7 +163,6 @@ namespace Hsinpa.Bluetooth
             if (id == MessageEventFlag.HsinpaBluetoothEvent.UIEvent.dispose) {
                 Dispose();
             }
-
         }
 
         private void OnScoreUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct) {
@@ -176,8 +179,6 @@ namespace Hsinpa.Bluetooth
         }
 
         private void OnTimerUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct) {
-            Debug.Log("OnTimerUIChange " + uiDataStruct.id +", value " + uiDataStruct.value);
-
             switch (uiDataStruct.id) {
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Start_Timer:
                     this._bleDataModel.PrimaryTimer.SetTimeType(DigitalTimer.Type.Timer_CountUp);
@@ -202,12 +203,8 @@ namespace Hsinpa.Bluetooth
         {
             Debug.Log("OnFunctionUIChange " + uiDataStruct.id);
 
-            switch (uiDataStruct.id)
-            {
-                case MessageEventFlag.HsinpaBluetoothEvent.FunctionUI.Next_Turn:
-                    _sportLogicFuncs.NextTurn(this._bleDataModel.ScoreType, this._bleDataModel.TimeType);
-                    break;
-            }
+            if (this._currentSport != null)
+                this._currentSport.OnFunctionUIChange(uiDataStruct);
         }
 
         private void OnInternalValueChange(string key, int value) {
@@ -220,8 +217,6 @@ namespace Hsinpa.Bluetooth
         }
 
         private void OnBluetoothConnect() {
-            if (boostConfigSRP != null)
-                boostConfigSRP.Execute();
         }
 
         private void OnDestroy()
@@ -255,7 +250,10 @@ namespace Hsinpa.Bluetooth
                     return tbvSport;
 
                 case MessageEventFlag.HsinpaBluetoothEvent.SportMode.Basketball:
-                    break;
+                    var basketballSport = new BasketballSport();
+                        basketballSport.SetSportSRP(Basketball_ConfigSRP);
+
+                    return basketballSport;
 
                 case MessageEventFlag.HsinpaBluetoothEvent.SportMode.Soccer:
                     break;

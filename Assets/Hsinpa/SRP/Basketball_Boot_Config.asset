@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b9d24e439313437682d449f96922a6a, type: 3}
+  m_Name: Basketball_Boot_Config
+  m_EditorClassIdentifier: 
+  uiDataStructs:
+  - id: time_event@sync_real_time
+    category: event@ui_time
+    value: 1
+    max_value: 0
+    is_increment: 0
+    hide_bluetooth_event: 0
+    sync_struct_table: 0
+    exclusive: 0
+  - id: time@counting_mode
+    category: event@ui_time
+    value: 1
+    max_value: 0
+    is_increment: 0
+    hide_bluetooth_event: 1
+    sync_struct_table: 1
+    exclusive: 0
+  - id: time@time_display_mode
+    category: event@ui_time
+    value: 0
+    max_value: 0
+    is_increment: 0
+    hide_bluetooth_event: 0
+    sync_struct_table: 1
+    exclusive: 0
+  uniqueDataStruct:
+  - id: time@time_display_mode
+    category: 
+    value: 8
+    max_value: 0
+    is_increment: 0
+    hide_bluetooth_event: 0
+    sync_struct_table: 0
+    exclusive: 0
+  - id: time@counting_mode
+    category: 
+    value: 1
+    max_value: 0
+    is_increment: 0
+    hide_bluetooth_event: 0
+    sync_struct_table: 0
+    exclusive: 0
+  constraint_array:
+  - sport_mode@basketball

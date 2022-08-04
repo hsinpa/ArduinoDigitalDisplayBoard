@@ -1,13 +1,13 @@
 {
   "dependencies": {
     "com.hsinpa.uistylesheet": {
-      "version": "https://github.com/hsinpa/UIStyleSheet_Unity.git?path=/Assets/UIStylesheet#p/0.0.8",
+      "version": "https://github.com/hsinpa/UIStyleSheet_Unity.git?path=/Assets/UIStylesheet#p/0.0.9",
       "depth": 0,
       "source": "git",
       "dependencies": {
         "com.unity.textmeshpro": "3.0.6"
       },
-      "hash": "f92212d85925e9b42c2161ac9c8e1867aaeadb06"
+      "hash": "5aef2b3528133baf6e0838ab59acc333f40583f3"
     },
     "com.unity.2d.animation": {
       "version": "7.0.6",

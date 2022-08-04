@@ -33,14 +33,14 @@ namespace Hsinpa.Bluetooth.Sport
 
         public void Init()
         {
-            if (_digitalMessageSRP.ConstraintPass(SportStruct.id))
-                _digitalMessageSRP.Execute();
+            _digitalBoardView.Action_Timer.SetSyncTimeMode();
         }
 
         public void Exist()
         {
-
         }
+
+
         #region UI Event
         public void OnTimerUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct)
         {
@@ -68,7 +68,12 @@ namespace Hsinpa.Bluetooth.Sport
 
         public void OnFunctionUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct)
         {
-
+            switch (uiDataStruct.id)
+            {
+                case MessageEventFlag.HsinpaBluetoothEvent.FunctionUI.Next_Turn:
+                    _digitlaBoardLogicHandler.SportLogicFuncs.NextTurn_HigherScoreWin(this._bleDataModel.ScoreType, this._bleDataModel.TimeType);
+                    break;
+            }
         }
         #endregion
 

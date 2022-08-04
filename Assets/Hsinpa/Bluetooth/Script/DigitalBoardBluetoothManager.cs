@@ -58,6 +58,8 @@ namespace Hsinpa.Bluetooth
         {
             try
             {
+                Hsinpa.Utility.SimpleEventSystem.Dispose();
+
                 hintModeView.gameObject.SetActive(true);
 
                 SimpleEventSystem.CustomEventListener += OnSimpleEventSystem;
@@ -85,6 +87,7 @@ namespace Hsinpa.Bluetooth
                 hintModeView.gameObject.SetActive(false);
             }
 
+            digitlaBoardLogicHandler.SetUp();
         }
 
         void OnDataReceived(BluetoothHelper helper)
@@ -207,9 +210,6 @@ namespace Hsinpa.Bluetooth
                     sportModeView.gameObject.SetActive(false);
                     digitalBoardModeView.gameObject.SetActive(true);
                     digitalBoardModeView.SetTitle(sportSettingStruct.title);
-                    digitalBoardModeView.SetSyncTimeMode(sport_id == MessageEventFlag.HsinpaBluetoothEvent.SportMode.Volleyball ||
-                                                         sport_id == MessageEventFlag.HsinpaBluetoothEvent.SportMode.TableTennis ||
-                                                         sport_id == MessageEventFlag.HsinpaBluetoothEvent.SportMode.Badminton);
 
                     digitlaBoardLogicHandler.ResetDigitalBoard();
 

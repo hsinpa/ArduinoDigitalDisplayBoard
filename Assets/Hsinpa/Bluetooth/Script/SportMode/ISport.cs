@@ -19,6 +19,7 @@ namespace Hsinpa.Bluetooth.Sport
         void SetSportSRP(DigitalMessageSRP srp);
 
         void Init();
+        void Exist();
 
         void OnTimerUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct);
         void OnFunctionUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct);

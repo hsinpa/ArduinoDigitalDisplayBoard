@@ -37,6 +37,10 @@ namespace Hsinpa.Bluetooth.Sport
                 _digitalMessageSRP.Execute();
         }
 
+        public void Exist()
+        {
+
+        }
         #region UI Event
         public void OnTimerUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct)
         {
@@ -50,28 +54,14 @@ namespace Hsinpa.Bluetooth.Sport
             switch (uiDataStruct.id)
             {
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Sync_Time:
-                    this._bleDataModel.DigitalTimer.time_type = DigitalTimer.Type.RealTime;
-                    this._bleDataModel.DigitalTimer.StartTimer();
+                    this._bleDataModel.PrimaryTimer.SetTimeType(DigitalTimer.Type.RealTime);
+                    this._bleDataModel.PrimaryTimer.StartTimer();
                     this._bleDataModel.UpdateTime();
                     break;
-                
-                //case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Start_Timer:
-                //    this._bleDataModel.DigitalTimer.time_type = DigitalTimer.Type.Timer_CoutUp;
-                //    this._bleDataModel.DigitalTimer.StartTimer();
-                //    break;
-
-                //case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Stop_Timer:
-                //    this._bleDataModel.DigitalTimer.StopTimer();
-                //    break;
-
-                //case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Reset_Timer:
-                //    this._bleDataModel.DigitalTimer.ResetTimer();
-                //    this._bleDataModel.TimeType.Dispose();
-                //    break;
 
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Counting_mode:
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Time_display_mode:
-
+                    this._digitlaBoardLogicHandler.SendUIDataStructBLE(uiDataStruct, _bleDataModel.TimeType);
                     break;
             }
         }

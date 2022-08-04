@@ -82,6 +82,29 @@ namespace SimpleEvent.ID {
                 public const string Sync_Time = "time_event@sync_real_time";
             }
 
+            public class OtherUI
+            {
+                public const string Placard1 = "other@placard_1";
+                public const string Placard2 = "other@placard_2";
+                public const string Placard3 = "other@placard_3";
+                public const string Placard4 = "other@placard_4";
+
+                //Basketball
+                public const string FoulMode = "other@foul_mode";
+                public const string FoulPlayer = "other@foul_player";
+                public const string FoulCount = "other@foul_count";
+
+                //Soccer, Handball
+                public const string Substitution = "other@substitution";
+                public const string Team = "other@team";
+                public const string OnCourtPlayer = "other@on_court_player";
+                public const string OffCourtPlayer = "other@off_court_player";
+
+                //Other
+                public const string OtherData1 = "other@other_data_1";
+                public const string OtherData2 = "other@other_data_2";
+            }
+
             public static Dictionary<string, int> ScoreIndexTable = new Dictionary<string, int>() {
                 { ScoreUI.H_score, 0},
                 { ScoreUI.G_score, 1},
@@ -110,6 +133,27 @@ namespace SimpleEvent.ID {
                 { TimeUI.Time_display_mode, 10},
                 { TimeUI.Other_Second, 11},
             };
+
+            public static Dictionary<string, int> OtherIndexTable = new Dictionary<string, int>() {
+                { OtherUI.Placard1, 0},
+                { OtherUI.Placard2, 1},
+                { OtherUI.Placard3, 2},
+                { OtherUI.Placard4, 3},
+
+                { OtherUI.FoulMode, 4},
+                { OtherUI.FoulPlayer, 5},
+                { OtherUI.FoulCount, 6},
+
+                { OtherUI.Substitution, 7},
+                { OtherUI.Team, 8},
+                { OtherUI.OnCourtPlayer, 9},
+                { OtherUI.OffCourtPlayer, 10},
+
+                { OtherUI.OtherData1, 11},
+                { OtherUI.OtherData2, 12},
+            };
+
+
             public struct SportSettingStruct {
                 public string id;
                 public string title;

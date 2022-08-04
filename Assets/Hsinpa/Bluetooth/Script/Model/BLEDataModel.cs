@@ -17,8 +17,12 @@ namespace Hsinpa.Bluetooth.Model {
         public DigitalBoardDataType.CharacterirticsData OtherType => _otherType;
 
 
-        private DigitalTimer _digitalTimer;
-        public DigitalTimer DigitalTimer => _digitalTimer;
+        private DigitalTimer _primaryTimer;
+        public DigitalTimer PrimaryTimer => _primaryTimer;
+
+        private DigitalTimer _secondaryTimer;
+        public DigitalTimer SecondaryTimer => _secondaryTimer;
+
 
         public BLEDataModel(
             DigitalBoardDataType.CharacterirticsData scoreType, 
@@ -29,15 +33,13 @@ namespace Hsinpa.Bluetooth.Model {
             this._timeType = timeType;
             this._otherType = otherType;
 
-            this._digitalTimer =  new DigitalTimer();
+            this._primaryTimer =  new DigitalTimer();
+            this._secondaryTimer = new DigitalTimer();
+            this._secondaryTimer.SetTimeType(DigitalTimer.Type.Timer_CountDown);
         }
 
         public void UpdateTime() {
-            if (this._digitalTimer != null && _digitalTimer.TimerState) {
-                this._timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Hour, _digitalTimer.GetHour());
-                this._timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Minute, _digitalTimer.GetMinute());
-                this._timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Second, _digitalTimer.GetSecond());
-            }
+            UpdatePrimaryTimer(this._timeType, _primaryTimer);
         }
 
 
@@ -45,10 +47,17 @@ namespace Hsinpa.Bluetooth.Model {
             _scoreType.Dispose();
             _timeType.Dispose();
             _otherType.Dispose();
-
-
         }
 
+        private void UpdatePrimaryTimer(DigitalBoardDataType.CharacterirticsData timeType, DigitalTimer timer) {
+
+            if (timer != null && timer.TimerState)
+            {
+                timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Hour, timer.GetHour());
+                timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Minute, timer.GetMinute());
+                timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Second, timer.GetSecond());
+            }
+        }
 
     }
 }

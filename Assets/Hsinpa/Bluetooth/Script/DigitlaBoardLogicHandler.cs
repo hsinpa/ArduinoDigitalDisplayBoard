@@ -31,7 +31,7 @@ namespace Hsinpa.Bluetooth
 
         private ISport _currentSport;
 
-        private const float update_period = 0.5f;
+        private const float update_period = 1f;
         private float update_record = 0;
 
         public void SetSportStruct(MessageEventFlag.HsinpaBluetoothEvent.SportSettingStruct sportSettingStruct) {
@@ -54,7 +54,7 @@ namespace Hsinpa.Bluetooth
             this._bleDataModel = new BLEDataModel(
                 scoreType: new DigitalBoardDataType.CharacterirticsData(10, digitalBoardBluetoothManager.ScoreCharacteristic, MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable),
                 timeType: new DigitalBoardDataType.CharacterirticsData(12, digitalBoardBluetoothManager.TimeCharacteristic,  MessageEventFlag.HsinpaBluetoothEvent.TimeIndexTable),
-                otherType: new DigitalBoardDataType.CharacterirticsData(14, digitalBoardBluetoothManager.OtherCharacteristic, null)
+                otherType: new DigitalBoardDataType.CharacterirticsData(14, digitalBoardBluetoothManager.OtherCharacteristic, MessageEventFlag.HsinpaBluetoothEvent.OtherIndexTable)
             );
 
             this._sportLogicFuncs = new SportLogicFuncs(this, digitalBoardEventSender, digitalBoardBluetoothManager);
@@ -66,6 +66,8 @@ namespace Hsinpa.Bluetooth
         private void Start()
         {
             SimpleEventSystem.CustomEventListener += OnSimpleEventSystem;
+            this._bleDataModel.PrimaryTimer.StartTimer();
+            this._bleDataModel.SecondaryTimer.StartTimer(target_second: 30);
         }
 
         private void Update()
@@ -74,7 +76,11 @@ namespace Hsinpa.Bluetooth
             {
                 this._bleDataModel.UpdateTime();
 
-                if (this._currentSport.SportStruct.id == MessageEventFlag.HsinpaBluetoothEvent.SportMode.Default)
+                //Debug.Log(p_digital_timer.GetHour());
+                //Debug.Log(p_digital_timer.GetMinute());
+                //Debug.Log(this._bleDataModel.SecondaryTimer.GetSecond());
+
+                if (this._currentSport != null && this._currentSport.SportStruct.id == MessageEventFlag.HsinpaBluetoothEvent.SportMode.Default)
                     SyncTimeData();
 
                 update_record = Time.time + update_period;
@@ -82,10 +88,6 @@ namespace Hsinpa.Bluetooth
         }
 
         private void SyncTimeData() {
-
-            //Debug.Log(p_digital_timer.GetHour());
-            //Debug.Log(p_digital_timer.GetMinute());
-            //Debug.Log(p_digital_timer.GetSecond());
 
             DigitalBoardDataType.BluetoothDataStruct bluetoothDataStruct = new DigitalBoardDataType.BluetoothDataStruct()
             {
@@ -177,28 +179,23 @@ namespace Hsinpa.Bluetooth
             Debug.Log("OnTimerUIChange " + uiDataStruct.id +", value " + uiDataStruct.value);
 
             switch (uiDataStruct.id) {
-                case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Sync_Time:
-                    this._bleDataModel.DigitalTimer.time_type = DigitalTimer.Type.RealTime;
-                    this._bleDataModel.DigitalTimer.StartTimer();
-
-                    this._bleDataModel.UpdateTime();
-                    break;
-
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Start_Timer:
-                    this._bleDataModel.DigitalTimer.time_type = DigitalTimer.Type.Timer_CountUp;
-                    this._bleDataModel.DigitalTimer.StartTimer();
+                    this._bleDataModel.PrimaryTimer.SetTimeType(DigitalTimer.Type.Timer_CountUp);
+                    this._bleDataModel.PrimaryTimer.StartTimer();
                     break;
 
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Stop_Timer:
-                    this._bleDataModel.DigitalTimer.StopTimer();
+                    this._bleDataModel.PrimaryTimer.StopTimer();
                     break;
 
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Reset_Timer:
-                    this._bleDataModel.DigitalTimer.ResetTimer();
+                    this._bleDataModel.PrimaryTimer.ResetTimer();
                     this._bleDataModel.TimeType.Dispose();
                     break;
-
             }
+
+            if (this._currentSport != null)
+                this._currentSport.OnTimerUIChange(uiDataStruct);
         }
 
         private void OnFunctionUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct)
@@ -236,7 +233,10 @@ namespace Hsinpa.Bluetooth
         public void Dispose()
         {
             this._bleDataModel.Dispose();
-            this._bleDataModel.DigitalTimer.ResetTimer();
+            this._bleDataModel.PrimaryTimer.ResetTimer();
+
+            if (this._currentSport != null)
+                this._currentSport.Exist();
 
             SportLogicFuncs.CleanDigitalBoard(digitalBoardBluetoothManager, digitalBoardEventSender);
         }

@@ -1,7 +1,9 @@
 {
     "name": "UtilityRef",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:6781bfa36380e5247ab75e000221269a"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

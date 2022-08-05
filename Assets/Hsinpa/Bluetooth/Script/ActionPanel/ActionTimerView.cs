@@ -30,6 +30,7 @@ namespace Hsinpa.Bluetooth.View {
         [SerializeField]
         private Button countdown_24_btn;
 
+        [Header("Text")]
         [SerializeField]
         private TextMeshProUGUI primary_time_text;
 

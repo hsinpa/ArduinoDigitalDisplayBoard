@@ -149,6 +149,7 @@ namespace SimpleEvent.ID {
                 { OtherUI.OnCourtPlayer, 9},
                 { OtherUI.OffCourtPlayer, 10},
 
+                { OtherUI.OffCourtPlayer, 10},
                 { OtherUI.OtherData1, 11},
                 { OtherUI.OtherData2, 12},
             };

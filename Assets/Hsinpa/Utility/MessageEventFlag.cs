@@ -6,10 +6,21 @@ namespace SimpleEvent.ID {
     public class MessageEventFlag : MonoBehaviour
     {
 
+        public class Const {
+            public const System.Int32 ScoreMode3 = 0x03;
+            public const System.Int32 ScoreMode9 = 0x09;
+
+            public const int BasketBallRoundSec = 600;//10 mins
+            public const int BasketBallIntermissionSec = 900; //15 mins
+        }
         public const int MaxTurn = 7;
         public const int MaxFoul = 9;
 
+        public const int Team_H = 0;
+        public const int Team_G = 1;
+
         public static readonly byte[] ResetTimerCommand = new byte[12] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00 };
+
 
         public class HsinpaBluetoothEvent {
 
@@ -43,6 +54,10 @@ namespace SimpleEvent.ID {
             public class FunctionUI
             {
                 public const string Next_Turn = "function@next_turn";
+
+                public const string Short_TimeOut = "function@short_timeout";
+                public const string Long_TimeOut = "function@long_timeout";
+                public const string Intermission = "function@intermission";
             }
 
             public class ScoreUI
@@ -78,6 +93,10 @@ namespace SimpleEvent.ID {
                 public const string Start_Timer = "time_event@start_timer";
                 public const string Stop_Timer = "time_event@stop_timer";
                 public const string Reset_Timer = "time_event@reset_timer";
+
+                //public const string CountDown14s = "time_event@count_down_14s";
+                //public const string CountDown24s = "time_event@count_down_24s";
+
 
                 public const string Sync_Time = "time_event@sync_real_time";
             }
@@ -149,7 +168,6 @@ namespace SimpleEvent.ID {
                 { OtherUI.OnCourtPlayer, 9},
                 { OtherUI.OffCourtPlayer, 10},
 
-                { OtherUI.OffCourtPlayer, 10},
                 { OtherUI.OtherData1, 11},
                 { OtherUI.OtherData2, 12},
             };

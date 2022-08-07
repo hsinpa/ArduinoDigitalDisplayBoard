@@ -33,7 +33,7 @@ namespace Hsinpa.Bluetooth.Sport
 
         public void Init()
         {
-            _digitalBoardView.Action_Timer.SetSyncTimeMode();
+            _digitalBoardView.SetTVBMode();
         }
 
         public void Exist()
@@ -42,12 +42,13 @@ namespace Hsinpa.Bluetooth.Sport
 
 
         #region UI Event
+        public void OnScoreUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct)
+        {
+            _digitlaBoardLogicHandler.SendUIDataStructBLE(uiDataStruct, this._bleDataModel.ScoreType);
+        }
+
         public void OnTimerUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct)
         {
-            if (uiDataStruct.sync_struct_table) {
-                int unique_value = this._digitalMessageSRP.GetUniqueDataStructWithTable(uiDataStruct.id);
-                if (unique_value >= 0) uiDataStruct.value = unique_value;
-            }
 
             Debug.Log("OnTimerUIChange " + uiDataStruct.id + ", value " + uiDataStruct.value);
 
@@ -59,10 +60,6 @@ namespace Hsinpa.Bluetooth.Sport
                     this._bleDataModel.UpdateTime();
                     break;
 
-                case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Counting_mode:
-                case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Time_display_mode:
-                    this._digitlaBoardLogicHandler.SendUIDataStructBLE(uiDataStruct, _bleDataModel.TimeType);
-                    break;
             }
         }
 

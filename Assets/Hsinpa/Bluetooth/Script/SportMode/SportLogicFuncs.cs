@@ -47,21 +47,11 @@ namespace Hsinpa.Bluetooth
 
             await Task.Yield();
 
-            SyncTimeValue(timeType);
+            _digitalBoardEventSender.SendBluetoothCharacterData(timeType); //Sync time data
         }
 
         public static void CleanDigitalBoard(DigitalBoardBluetoothManager bleManager, DigitalBoardEventSender bleEventSender) {
-            DigitalBoardDataType.BluetoothDataStruct scoreDataStruct = new DigitalBoardDataType.BluetoothDataStruct()
-            {
-                characteristic = bleManager.ScoreCharacteristic,
-                data = new byte[10]
-                {
-                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00
-                }
-            };
-
-            bleEventSender.SendBluetoothData(scoreDataStruct);
-
+            SetScoreMode(MessageEventFlag.Const.ScoreMode3, bleManager.ScoreCharacteristic, bleEventSender);
             DigitalBoardDataType.BluetoothDataStruct timeDataStruct = new DigitalBoardDataType.BluetoothDataStruct()
             {
                 characteristic = bleManager.TimeCharacteristic,
@@ -69,6 +59,19 @@ namespace Hsinpa.Bluetooth
             };
 
             bleEventSender.SendBluetoothData(timeDataStruct);
+        }
+
+        public static void SetScoreMode(System.Int32 mode, ArduinoBluetoothAPI.BluetoothHelperCharacteristic characteristic, DigitalBoardEventSender bleEventSender) {
+            DigitalBoardDataType.BluetoothDataStruct scoreDataStruct = new DigitalBoardDataType.BluetoothDataStruct()
+            {
+                characteristic = characteristic,
+                data = new byte[10]
+                {
+                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, System.Convert.ToByte(mode), 0x00, 0x00
+                }
+            };
+
+            bleEventSender.SendBluetoothData(scoreDataStruct);
         }
 
         public void SyncScoreValue(DigitalBoardDataType.CharacterirticsData scoreType) {
@@ -82,15 +85,11 @@ namespace Hsinpa.Bluetooth
                 scoreType);
         }
 
-        public void SyncTimeValue(DigitalBoardDataType.CharacterirticsData timeType)
-        {
-            DigitalBoardDataType.BluetoothDataStruct timeDataStruct = new DigitalBoardDataType.BluetoothDataStruct()
-            {
-                characteristic = _digitalBoardBluetoothManager.TimeCharacteristic,
-                data = timeType.Data
-            };
+        public void SendTimeEvent(DigitalBoardDataType.CharacterirticsData timeType) {
+           //Prevent weird behavior from counting double call
+           timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Counting_mode, 0);
 
-            _digitalBoardEventSender.SendBluetoothData(timeDataStruct);
+            this._digitalBoardEventSender.SendBluetoothCharacterData(timeType);
         }
 
         private bool ExecNextTurn(ref DigitalBoardDataType.CharacterirticsData scoreType, ref DigitalBoardDataType.CharacterirticsData timeType) {

@@ -21,6 +21,14 @@ namespace Hsinpa.Bluetooth
             dataStructQueue.Enqueue(dataStruct);
         }
 
+        public void SendBluetoothCharacterData(DigitalBoardDataType.CharacterirticsData characterirticsData)
+        {
+            dataStructQueue.Enqueue(new DigitalBoardDataType.BluetoothDataStruct() { 
+                characteristic= characterirticsData.BLECharacteristic,
+                data = characterirticsData.Data
+            });
+        }
+
         #endregion
 
         private void Start()

@@ -259,7 +259,7 @@ namespace Hsinpa.Utility
 			return path;
 		}
 
-		public static Dictionary<string, T> SetDictionary<T>(Dictionary<string, T> dict, string key, T addValue) {
+		public static Dictionary<T, K> SetDictionary<T,K>(Dictionary<T, K> dict, T key, K addValue) {
 
 			if (dict.ContainsKey(key))
 			{

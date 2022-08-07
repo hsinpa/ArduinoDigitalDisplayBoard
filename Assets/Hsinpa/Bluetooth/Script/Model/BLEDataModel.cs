@@ -16,13 +16,14 @@ namespace Hsinpa.Bluetooth.Model {
         private DigitalBoardDataType.CharacterirticsData _otherType;
         public DigitalBoardDataType.CharacterirticsData OtherType => _otherType;
 
-
         private DigitalTimer _primaryTimer;
         public DigitalTimer PrimaryTimer => _primaryTimer;
 
         private DigitalTimer _secondaryTimer;
         public DigitalTimer SecondaryTimer => _secondaryTimer;
 
+        private TeamFoulModel teamFoulModel;
+        public TeamFoulModel TeamFoulModel => teamFoulModel;
 
         public BLEDataModel(
             DigitalBoardDataType.CharacterirticsData scoreType, 
@@ -32,6 +33,8 @@ namespace Hsinpa.Bluetooth.Model {
             this._scoreType = scoreType;
             this._timeType = timeType;
             this._otherType = otherType;
+
+            this.teamFoulModel = new TeamFoulModel();
 
             this._primaryTimer =  new DigitalTimer();
             this._secondaryTimer = new DigitalTimer();
@@ -47,6 +50,8 @@ namespace Hsinpa.Bluetooth.Model {
             _scoreType.Dispose();
             _timeType.Dispose();
             _otherType.Dispose();
+
+            this.teamFoulModel.Dipose();
         }
 
         private void UpdatePrimaryTimer(DigitalBoardDataType.CharacterirticsData timeType, DigitalTimer timer) {

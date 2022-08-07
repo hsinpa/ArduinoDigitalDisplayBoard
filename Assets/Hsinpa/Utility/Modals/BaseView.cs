@@ -8,7 +8,6 @@ namespace Hsinpa.View
         [SerializeField]
         protected bool enableModalBG;
         public bool EnableModalBG => this.enableModalBG;
-        public string bgAddressableKey;
 
         [SerializeField]
         protected CanvasGroup canvasGroup;

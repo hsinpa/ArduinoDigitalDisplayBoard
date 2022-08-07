@@ -29,13 +29,23 @@ namespace Hsinpa.Bluetooth
                 this.index_table = index_table;
             }
 
-            public void Increment_Value(string key) {
+            public void Increment_Value(string key, int max = -1) {
+                if (max >= 0 && GetValue(key) >= max) {
+                    return;
+                }
+
                 System.Int32 get_value = GetValue(key);
                 Set_Value(key, get_value + 1);
             }
 
-            public void Decrement_Value(string key)
+            public void Decrement_Value(string key, int min = 0)
             {
+                if (min > 0 && GetValue(key) < min)
+                {
+                    return;
+                }
+
+
                 System.Int32 get_value = GetValue(key);
                 Set_Value(key, get_value - 1);
             }

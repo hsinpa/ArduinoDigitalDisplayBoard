@@ -13,14 +13,6 @@ MonoBehaviour:
   m_Name: Basketball_Boot_Config
   m_EditorClassIdentifier: 
   uiDataStructs:
-  - id: time_event@sync_real_time
-    category: event@ui_time
-    value: 1
-    max_value: 0
-    is_increment: 0
-    hide_bluetooth_event: 0
-    sync_struct_table: 0
-    exclusive: 0
   - id: time@counting_mode
     category: event@ui_time
     value: 1
@@ -37,6 +29,14 @@ MonoBehaviour:
     hide_bluetooth_event: 0
     sync_struct_table: 1
     exclusive: 0
+  - id: score@h_main_attack
+    category: event@ui_score
+    value: 1
+    max_value: 0
+    is_increment: 0
+    hide_bluetooth_event: 0
+    sync_struct_table: 1
+    exclusive: 0
   uniqueDataStruct:
   - id: time@time_display_mode
     category: 
@@ -48,7 +48,31 @@ MonoBehaviour:
     exclusive: 0
   - id: time@counting_mode
     category: 
-    value: 1
+    value: 2
+    max_value: 0
+    is_increment: 0
+    hide_bluetooth_event: 0
+    sync_struct_table: 0
+    exclusive: 0
+  - id: function@short_timeout
+    category: 
+    value: 20
+    max_value: 0
+    is_increment: 0
+    hide_bluetooth_event: 0
+    sync_struct_table: 0
+    exclusive: 0
+  - id: function@long_timeout
+    category: 
+    value: 100
+    max_value: 0
+    is_increment: 0
+    hide_bluetooth_event: 0
+    sync_struct_table: 0
+    exclusive: 0
+  - id: function@intermission
+    category: 
+    value: 900000
     max_value: 0
     is_increment: 0
     hide_bluetooth_event: 0

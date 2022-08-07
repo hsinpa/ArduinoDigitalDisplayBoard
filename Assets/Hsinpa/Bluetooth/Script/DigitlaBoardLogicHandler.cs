@@ -17,6 +17,7 @@ namespace Hsinpa.Bluetooth
 
         [SerializeField]
         private DigitalBoardEventSender digitalBoardEventSender;
+        public DigitalBoardEventSender DigitalBoardEventSender => digitalBoardEventSender;
 
         [Header("SRP Config")]
         [SerializeField]
@@ -42,10 +43,8 @@ namespace Hsinpa.Bluetooth
             _currentSport = GetSport(sportSettingStruct.id);
             _currentSport.Setup(this, sportSettingStruct, this._bleDataModel, digitalBoardBluetoothManager.DigitalBoardModeView);
 
-            if (_currentSport.SRP.ConstraintPass(sportSettingStruct.id))
-                _currentSport.SRP.Execute();
-
             _currentSport.Init();
+            _currentSport.SRP.Execute();
         }
 
         public void SetUp()
@@ -117,6 +116,7 @@ namespace Hsinpa.Bluetooth
 
         public void SendUIDataStructBLE(DigitalBoardDataType.UIDataStruct uiDataStruct,
             DigitalBoardDataType.CharacterirticsData characteristic_data) {
+            Debug.Log($"SendUIDataStructBLE Send : { uiDataStruct.id }, value ${uiDataStruct.value}");
 
             if (uiDataStruct.max_value > 0 && uiDataStruct.max_value <= characteristic_data.GetValue(uiDataStruct.id)) {
                 Debug.Log($"SendUIDataStructBLE Warning : { uiDataStruct.id } Max value is reach");
@@ -132,7 +132,6 @@ namespace Hsinpa.Bluetooth
             }
             else
             {
-
                 characteristic_data.Set_Value(uiDataStruct.id, uiDataStruct.value);
             }
 
@@ -168,17 +167,25 @@ namespace Hsinpa.Bluetooth
         private void OnScoreUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct) {
             Debug.Log("OnScoreUIChange " + uiDataStruct.id);
 
-
             if (uiDataStruct.exclusive) {
                 var emptyCharSet = new DigitalBoardDataType.CharacterirticsData(10, digitalBoardBluetoothManager.ScoreCharacteristic, MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable);
                 SendUIDataStructBLE(uiDataStruct, emptyCharSet);
                 return;
             }
 
-            SendUIDataStructBLE(uiDataStruct, this._bleDataModel.ScoreType);
+            if (this._currentSport != null)
+                this._currentSport.OnScoreUIChange(uiDataStruct);
+
+            //SendUIDataStructBLE(uiDataStruct, this._bleDataModel.ScoreType);
         }
 
         private void OnTimerUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct) {
+            if (uiDataStruct.sync_struct_table)
+            {
+                int unique_value = this._currentSport.SRP.GetUniqueDataStructWithTable(uiDataStruct.id);
+                if (unique_value >= 0) uiDataStruct.value = unique_value;
+            }
+
             switch (uiDataStruct.id) {
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Start_Timer:
                     this._bleDataModel.PrimaryTimer.SetTimeType(DigitalTimer.Type.Timer_CountUp);
@@ -192,6 +199,15 @@ namespace Hsinpa.Bluetooth
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Reset_Timer:
                     this._bleDataModel.PrimaryTimer.ResetTimer();
                     this._bleDataModel.TimeType.Dispose();
+                    break;
+
+                case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Other_Second:
+                    SendUIDataStructBLE(uiDataStruct, this._bleDataModel.TimeType);
+                    break;
+
+                case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Counting_mode:
+                case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Time_display_mode:
+                    SendUIDataStructBLE(uiDataStruct, _bleDataModel.TimeType);
                     break;
             }
 

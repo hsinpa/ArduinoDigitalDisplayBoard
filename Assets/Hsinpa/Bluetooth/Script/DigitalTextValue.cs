@@ -16,6 +16,8 @@ namespace Hsinpa.Bluetooth
         [SerializeField]
         private string field_format;
 
+        public string target_id;
+
         [SerializeField]
         private List<DigitalBoardDataType.UIDataStruct> data;
 
@@ -25,6 +27,10 @@ namespace Hsinpa.Bluetooth
 
             UpdateDataValue(data);
         }
+
+        public void SetFieldFormat(string p_format) { 
+            this.field_format = p_format;
+        } 
 
         private void OnSimpleEventSystem(string id, object[] values)
         {

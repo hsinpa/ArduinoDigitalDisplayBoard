@@ -95,14 +95,11 @@ namespace Hsinpa.Bluetooth.View {
             countdown_24_btn.gameObject.SetActive(true);
         }
 
-        public void SetSoccerTimeMode()
+        public void SetSoccerHandballTimeMode()
         {
             Reset();
-        }
-
-        public void SetHandballTimeMode()
-        {
-            Reset();
+            start_timer.gameObject.SetActive(true);
+            stop_timer.gameObject.SetActive(true);
         }
 
         public void Reset()

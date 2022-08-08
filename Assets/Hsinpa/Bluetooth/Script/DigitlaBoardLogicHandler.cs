@@ -29,6 +29,12 @@ namespace Hsinpa.Bluetooth
         [SerializeField]
         private DigitalMessageSRP Basketball_ConfigSRP;
 
+        [SerializeField]
+        private DigitalMessageSRP Soccer_ConfigSRP;
+
+        [SerializeField]
+        private DigitalMessageSRP Handball_ConfigSRP;
+
         private BLEDataModel _bleDataModel;
 
         private SportLogicFuncs _sportLogicFuncs;
@@ -43,6 +49,7 @@ namespace Hsinpa.Bluetooth
             _currentSport = GetSport(sportSettingStruct.id);
             _currentSport.Setup(this, sportSettingStruct, this._bleDataModel, digitalBoardBluetoothManager.DigitalBoardModeView);
 
+            _bleDataModel.TeamFoulModel.Dipose();
             _currentSport.Init();
             _currentSport.SRP.Execute();
         }
@@ -188,7 +195,7 @@ namespace Hsinpa.Bluetooth
 
             switch (uiDataStruct.id) {
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Start_Timer:
-                    this._bleDataModel.PrimaryTimer.SetTimeType(DigitalTimer.Type.Timer_CountUp);
+                    //this._bleDataModel.PrimaryTimer.SetTimeType(DigitalTimer.Type.Timer_CountUp);
                     this._bleDataModel.PrimaryTimer.StartTimer();
                     break;
 
@@ -272,9 +279,13 @@ namespace Hsinpa.Bluetooth
                     return basketballSport;
 
                 case MessageEventFlag.HsinpaBluetoothEvent.SportMode.Soccer:
+                    var soccerSport = new SoccerSport();
+                    soccerSport.SetSportSRP(Soccer_ConfigSRP);
                     break;
 
                 case MessageEventFlag.HsinpaBluetoothEvent.SportMode.Handball:
+                    var handballSport = new HandBallSport();
+                    handballSport.SetSportSRP(Handball_ConfigSRP);
                     break;
             
             }

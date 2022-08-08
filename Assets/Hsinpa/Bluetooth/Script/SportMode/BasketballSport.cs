@@ -41,7 +41,6 @@ namespace Hsinpa.Bluetooth.Sport
             _bleDataModel.PrimaryTimer.SetTimeType(DigitalTimer.Type.Timer_CountDown);
             _bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.BasketBallRoundSec); //10 mins
             _bleDataModel.UpdateTime();
-            _bleDataModel.TeamFoulModel.Dipose();
 
             _digitalBoardView.SetBasketballMode();
         }
@@ -80,7 +79,7 @@ namespace Hsinpa.Bluetooth.Sport
                     break;
 
                 case MessageEventFlag.HsinpaBluetoothEvent.FunctionUI.Intermission:
-                    _bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.BasketBallIntermissionSec);
+                    _bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.Intermission_15Sec);
                     _bleDataModel.UpdateTime();
                     this._digitlaBoardLogicHandler.SportLogicFuncs.SendTimeEvent(_bleDataModel.TimeType);
                     break;
@@ -106,11 +105,15 @@ namespace Hsinpa.Bluetooth.Sport
 
         private void OnFoulConfigClick(int team_id) {
             ExtraFoulModal extraFoulModal = Modals.instance.OpenModal<ExtraFoulModal>();
+            string team_label = string.Format(StaticText.Functions.ExtraFoulTitle, (team_id == 0) ? "H " : "G");
 
-            extraFoulModal.SetUp(team_id, 
+            extraFoulModal.SetText(team_label, "Player ID", "Fouls Count");
+
+            extraFoulModal.SetUp(
             (int player_id) => {
-                extraFoulModal.Foul_Count_Field.text = _bleDataModel.TeamFoulModel.GetFouls(team_id, player_id).ToString();
+                extraFoulModal.Input_Two_Field.text = _bleDataModel.TeamFoulModel.GetFouls(team_id, player_id).ToString();
             },
+
             (int player_id, int foul_count) => {
                 Modals.instance.Close();
 

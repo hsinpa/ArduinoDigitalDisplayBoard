@@ -11,7 +11,11 @@ namespace SimpleEvent.ID {
             public const System.Int32 ScoreMode9 = 0x09;
 
             public const int BasketBallRoundSec = 600;//10 mins
-            public const int BasketBallIntermissionSec = 900; //15 mins
+            public const int Intermission_15Sec = 900; //15 mins
+
+            public const int SoccerRoundSec = 2700;//45 mins
+            public const int HandballRoundSec = 1800;//30 mins
+
         }
         public const int MaxTurn = 7;
         public const int MaxFoul = 9;
@@ -58,6 +62,8 @@ namespace SimpleEvent.ID {
                 public const string Short_TimeOut = "function@short_timeout";
                 public const string Long_TimeOut = "function@long_timeout";
                 public const string Intermission = "function@intermission";
+
+                public const string Substitution = "function@substitution";
             }
 
             public class ScoreUI

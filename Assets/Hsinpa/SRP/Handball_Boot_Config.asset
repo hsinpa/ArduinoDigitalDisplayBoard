@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b9d24e439313437682d449f96922a6a, type: 3}
-  m_Name: Basketball_Boot_Config
+  m_Name: Handball_Boot_Config
   m_EditorClassIdentifier: 
   uiDataStructs:
   - id: time@counting_mode
@@ -40,7 +40,7 @@ MonoBehaviour:
   uniqueDataStruct:
   - id: time@time_display_mode
     category: 
-    value: 8
+    value: 1
     max_value: 0
     is_increment: 0
     hide_bluetooth_event: 0
@@ -49,22 +49,6 @@ MonoBehaviour:
   - id: time@counting_mode
     category: 
     value: 2
-    max_value: 0
-    is_increment: 0
-    hide_bluetooth_event: 0
-    sync_struct_table: 0
-    exclusive: 0
-  - id: function@short_timeout
-    category: 
-    value: 20
-    max_value: 0
-    is_increment: 0
-    hide_bluetooth_event: 0
-    sync_struct_table: 0
-    exclusive: 0
-  - id: function@long_timeout
-    category: 
-    value: 100
     max_value: 0
     is_increment: 0
     hide_bluetooth_event: 0

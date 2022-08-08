@@ -14,12 +14,17 @@ namespace Hsinpa.Bluetooth
         [SerializeField]
         private TextMeshProUGUI titleText;
 
+        [Header("Function")]
+        [SerializeField]
+        private ActionFunctionView action_function;
+        public ActionFunctionView Action_Function => action_function;
+
         [Header("Timer")]
         [SerializeField]
         private ActionTimerView action_timer;
         public ActionTimerView Action_Timer => action_timer;
 
-        [Header("Timer")]
+        [Header("Score")]
         [SerializeField]
         private ActionScoreView h_action_score;
         public ActionScoreView Action_Score_H => h_action_score;
@@ -36,6 +41,7 @@ namespace Hsinpa.Bluetooth
             action_timer.SetSyncTimeMode();
             h_action_score.SetTBVSportMode();
             g_action_score.SetTBVSportMode();
+            action_function.SetTBVFuncMode();
 
         }
 
@@ -43,7 +49,23 @@ namespace Hsinpa.Bluetooth
             action_timer.SetBasketballTimeMode();
             h_action_score.SetBasketballSportMode();
             g_action_score.SetBasketballSportMode();
+            action_function.SetBasketballFuncMode();
         }
 
+        public void SetSoccerMode()
+        {
+            action_timer.SetSoccerHandballTimeMode();
+            h_action_score.SetSoccer_HandballSportMode();
+            g_action_score.SetSoccer_HandballSportMode();
+            action_function.SetSoccerHandballTimeMode();
+        }
+
+        public void SetHandballMode()
+        {
+            action_timer.SetSoccerHandballTimeMode();
+            h_action_score.SetSoccer_HandballSportMode();
+            g_action_score.SetSoccer_HandballSportMode();
+            action_function.SetSoccerHandballTimeMode();
+        }
     }
 }

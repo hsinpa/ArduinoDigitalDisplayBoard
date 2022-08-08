@@ -20,17 +20,13 @@ namespace Hsinpa.Bluetooth.View
         [SerializeField]
         private Button long_timeout_btn;
 
-        [Header("Small Tab Functions")]
-        [SerializeField]
-        private Button extra_foul_btn;
-
-        public void SetSyncTimeMode()
+        public void SetTBVFuncMode()
         {
             Reset();
             next_turn_btn.gameObject.SetActive(true);
         }
 
-        public void SetBasketballTimeMode()
+        public void SetBasketballFuncMode()
         {
             Reset();
 
@@ -39,8 +35,14 @@ namespace Hsinpa.Bluetooth.View
 
             short_timeout_btn.gameObject.SetActive(true);
             long_timeout_btn.gameObject.SetActive(true);
+        }
 
-            extra_foul_btn.gameObject.SetActive(true);
+        public void SetSoccerHandballTimeMode()
+        {
+            Reset();
+
+            next_turn_btn.gameObject.SetActive(true);
+            intermission_btn.gameObject.SetActive(true);
         }
 
         public void Reset()
@@ -49,7 +51,6 @@ namespace Hsinpa.Bluetooth.View
             intermission_btn.gameObject.SetActive(false);
             long_timeout_btn.gameObject.SetActive(false);
             short_timeout_btn.gameObject.SetActive(false);
-            extra_foul_btn.gameObject.SetActive(false);
         }
 
     }

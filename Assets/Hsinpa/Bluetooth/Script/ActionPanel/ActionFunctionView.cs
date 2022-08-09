@@ -10,6 +10,8 @@ namespace Hsinpa.Bluetooth.View
         [Header("Control Bar")]
         [SerializeField]
         private Button next_turn_btn;
+        public Button Next_turn_btn => next_turn_btn;
+
 
         [SerializeField]
         private Button intermission_btn;
@@ -19,6 +21,8 @@ namespace Hsinpa.Bluetooth.View
 
         [SerializeField]
         private Button long_timeout_btn;
+
+
 
         public void SetTBVFuncMode()
         {
@@ -47,6 +51,7 @@ namespace Hsinpa.Bluetooth.View
 
         public void Reset()
         {
+            next_turn_btn.interactable = true;
             next_turn_btn.gameObject.SetActive(false);
             intermission_btn.gameObject.SetActive(false);
             long_timeout_btn.gameObject.SetActive(false);

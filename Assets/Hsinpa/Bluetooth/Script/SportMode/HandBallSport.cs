@@ -47,6 +47,18 @@ namespace Hsinpa.Bluetooth.Sport
 
         public void OnFunctionUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct)
         {
+            switch (uiDataStruct.id)
+            {
+                case MessageEventFlag.HsinpaBluetoothEvent.FunctionUI.Next_Turn:
+                    this._digitlaBoardLogicHandler.SportLogicFuncs.NextTurn_Soccer_Handball(_bleDataModel, _digitalBoardView);
+                    break;
+
+                case MessageEventFlag.HsinpaBluetoothEvent.FunctionUI.Intermission:
+                    _bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.Intermission_15Sec);
+                    _bleDataModel.UpdateTime();
+                    this._digitlaBoardLogicHandler.SportLogicFuncs.SendTimeEvent(_bleDataModel.TimeType);
+                    break;
+            }
         }
 
         public void OnScoreUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct)

@@ -8,6 +8,7 @@ namespace SimpleEvent.ID
     {
         public class Functions {
             public const string ExtraFoulTitle = "Set Team {0}'s fouls count";
+            public const string SubstitutionTitle = "Team {0}: Substitution";
         }
 
     }

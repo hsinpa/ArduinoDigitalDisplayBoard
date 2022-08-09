@@ -87,7 +87,7 @@ namespace Hsinpa.Bluetooth.View {
         public void SetBasketballTimeMode()
         {
             Reset();
-
+            start_timer.interactable = false;
             start_timer.gameObject.SetActive(true);
             stop_timer.gameObject.SetActive(true);
 
@@ -98,12 +98,15 @@ namespace Hsinpa.Bluetooth.View {
         public void SetSoccerHandballTimeMode()
         {
             Reset();
+
+            start_timer.interactable = false;
             start_timer.gameObject.SetActive(true);
             stop_timer.gameObject.SetActive(true);
         }
 
         public void Reset()
         {
+
             start_timer.gameObject.SetActive(false);
             stop_timer.gameObject.SetActive(false);
             reset_timer.gameObject.SetActive(false);

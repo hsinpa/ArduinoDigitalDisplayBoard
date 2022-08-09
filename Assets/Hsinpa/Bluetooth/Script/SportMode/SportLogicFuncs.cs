@@ -1,6 +1,7 @@
+using Hsinpa.Bluetooth.Model;
+using Hsinpa.Bluetooth.View;
+using Hsinpa.View;
 using SimpleEvent.ID;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -48,6 +49,19 @@ namespace Hsinpa.Bluetooth
             await Task.Yield();
 
             _digitalBoardEventSender.SendBluetoothCharacterData(timeType); //Sync time data
+        }
+
+        public void NextTurn_Soccer_Handball(BLEDataModel bleDataModel, DigitalBoardView digitalBoardView) {
+            bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.SoccerRoundSec);
+            bleDataModel.UpdateTime();
+            this._digitlaBoardLogicHandler.SportLogicFuncs.SendTimeEvent(bleDataModel.TimeType);
+
+            bleDataModel.ScoreType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.G_main_attack, 1);
+            bleDataModel.ScoreType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.H_main_attack, 0);
+            this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(bleDataModel.ScoreType);
+
+            digitalBoardView.Action_Function.Next_turn_btn.interactable = false;
+
         }
 
         public static void CleanDigitalBoard(DigitalBoardBluetoothManager bleManager, DigitalBoardEventSender bleEventSender) {
@@ -128,5 +142,40 @@ namespace Hsinpa.Bluetooth
             return false;
         }
 
+        public void ShowSubstitutionModal(int team_id, BLEDataModel bleDataModel) {
+            ExtraFoulModal extraFoulModal = Modals.instance.OpenModal<ExtraFoulModal>();
+            string team_label = string.Format(StaticText.Functions.SubstitutionTitle, (team_id == 0) ? "H " : "G");
+
+            extraFoulModal.SetText(team_label, "Brought off player", "Substitute player");
+
+            extraFoulModal.SetUp(
+            (int player_id) => {
+            },
+
+            (int broghtoff_id, int substitude_id) => {
+
+                if ((broghtoff_id < 0 || substitude_id < 0) || (broghtoff_id == substitude_id)) return;
+
+                Modals.instance.Close();
+
+                ExecSubstitution(team_id, broghtoff_id, substitude_id, bleDataModel);
+                //ExecuteFoulConfig(team_id, player_id, foul_count, bleDataModel.TeamFoulModel.GetTotalFouls(team_id));
+            });
+        }
+
+        public async void ExecSubstitution(int team_id, int broghtoff_id, int substitude_id, BLEDataModel bleDataModel) {
+            SportLogicFuncs.SetScoreMode(MessageEventFlag.Const.ScoreMode9,
+                                                    bleDataModel.ScoreType.BLECharacteristic,
+                                                    this._digitlaBoardLogicHandler.DigitalBoardEventSender);
+
+            bleDataModel.OtherType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.OtherUI.Substitution, 1);
+            bleDataModel.OtherType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.OtherUI.Team, (team_id == 0) ? 1 : 2);
+            bleDataModel.OtherType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.OtherUI.OffCourtPlayer, broghtoff_id);
+            bleDataModel.OtherType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.OtherUI.OnCourtPlayer, substitude_id);
+
+            await Task.Yield();
+
+            this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(bleDataModel.OtherType);
+        }
     }
 }

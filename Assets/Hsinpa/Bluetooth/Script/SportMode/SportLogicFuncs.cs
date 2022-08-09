@@ -51,8 +51,8 @@ namespace Hsinpa.Bluetooth
             _digitalBoardEventSender.SendBluetoothCharacterData(timeType); //Sync time data
         }
 
-        public void NextTurn_Soccer_Handball(BLEDataModel bleDataModel, DigitalBoardView digitalBoardView) {
-            bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.SoccerRoundSec);
+        public void NextTurn_Soccer_Handball(BLEDataModel bleDataModel, DigitalBoardView digitalBoardView, int target_time) {
+            bleDataModel.PrimaryTimer.StartTimer(target_time);
             bleDataModel.UpdateTime();
             this._digitlaBoardLogicHandler.SportLogicFuncs.SendTimeEvent(bleDataModel.TimeType);
 
@@ -176,6 +176,10 @@ namespace Hsinpa.Bluetooth
             await Task.Yield();
 
             this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(bleDataModel.OtherType);
+
+            await Task.Delay(2000);
+
+            this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(bleDataModel.ScoreType);
         }
     }
 }

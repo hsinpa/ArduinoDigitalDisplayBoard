@@ -51,6 +51,8 @@ namespace Hsinpa.Bluetooth
 
             _bleDataModel.TeamFoulModel.Dipose();
             _currentSport.Init();
+
+            Debug.Log(_currentSport.SRP != null);
             _currentSport.SRP.Execute();
         }
 
@@ -194,11 +196,6 @@ namespace Hsinpa.Bluetooth
             }
 
             switch (uiDataStruct.id) {
-                case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Start_Timer:
-                    //this._bleDataModel.PrimaryTimer.SetTimeType(DigitalTimer.Type.Timer_CountUp);
-                    this._bleDataModel.PrimaryTimer.StartTimer();
-                    break;
-
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Stop_Timer:
                     this._bleDataModel.PrimaryTimer.StopTimer();
                     break;
@@ -281,12 +278,12 @@ namespace Hsinpa.Bluetooth
                 case MessageEventFlag.HsinpaBluetoothEvent.SportMode.Soccer:
                     var soccerSport = new SoccerSport();
                     soccerSport.SetSportSRP(Soccer_ConfigSRP);
-                    break;
+                    return soccerSport;
 
                 case MessageEventFlag.HsinpaBluetoothEvent.SportMode.Handball:
                     var handballSport = new HandBallSport();
                     handballSport.SetSportSRP(Handball_ConfigSRP);
-                    break;
+                    return handballSport;
             
             }
 

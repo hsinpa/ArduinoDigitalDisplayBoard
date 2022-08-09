@@ -30,9 +30,18 @@ namespace Hsinpa.Bluetooth
             timer_state = true;
         }
 
+        public void ContinueTimer() { 
+            
+        }
+
         public void StopTimer() {
             if (!timer_state) return; 
             timer_state = false;
+
+            if (time_type == Type.Timer_CountDown) {
+                leak_datetime = (System.DateTime.UtcNow - start_datetime) +leak_datetime;
+                return;
+            }
 
             leak_datetime = GetTimeDifferent();
         }
@@ -71,7 +80,7 @@ namespace Hsinpa.Bluetooth
             var time_leap = (System.DateTime.UtcNow - start_datetime) + leak_datetime;
 
             if (time_type == Type.Timer_CountDown) {
-                return (leak_datetime + this.target_second) - (time_leap);
+                return ((this.target_second) - time_leap);
             }
 
             return time_leap;

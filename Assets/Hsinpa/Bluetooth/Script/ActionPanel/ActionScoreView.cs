@@ -34,6 +34,8 @@ namespace Hsinpa.Bluetooth.View
             substitude_btn.gameObject.SetActive(false);
             foul_plus.gameObject.SetActive(true);
             foul_minus.gameObject.SetActive(true);
+            foul_title.gameObject.SetActive(true);
+
             foul_title.SetFieldFormat("Set<br>{" + foul_title.target_id + "}");
         }
 
@@ -42,6 +44,7 @@ namespace Hsinpa.Bluetooth.View
             substitude_btn.gameObject.SetActive(false);
             foul_minus.gameObject.SetActive(false);
             foul_plus.gameObject.SetActive(true);
+            foul_title.gameObject.SetActive(true);
             foul_title.SetFieldFormat("Fouls<br>{" + foul_title.target_id + "}");
         }
     }

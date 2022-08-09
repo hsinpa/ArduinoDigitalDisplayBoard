@@ -45,6 +45,14 @@ MonoBehaviour:
     hide_bluetooth_event: 0
     sync_struct_table: 0
     exclusive: 0
+  - id: score@sport_time
+    category: event@ui_score
+    value: 1
+    max_value: 0
+    is_increment: 0
+    hide_bluetooth_event: 0
+    sync_struct_table: 0
+    exclusive: 0
   uniqueDataStruct:
   - id: time@time_display_mode
     category: 
@@ -62,7 +70,3 @@ MonoBehaviour:
     hide_bluetooth_event: 0
     sync_struct_table: 0
     exclusive: 0
-  constraint_array:
-  - sport_mode@volleyball
-  - sport_mode@badminton
-  - sport_mode@tabletennis

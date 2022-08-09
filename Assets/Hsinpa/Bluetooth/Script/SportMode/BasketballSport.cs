@@ -100,7 +100,12 @@ namespace Hsinpa.Bluetooth.Sport
 
         public void OnTimerUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct)
         {
-
+            switch (uiDataStruct.id)
+            {
+                case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Start_Timer:
+                    this._bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.BasketBallRoundSec); 
+                    break;
+            }
         }
 
         private void OnFoulConfigClick(int team_id) {
@@ -146,7 +151,7 @@ namespace Hsinpa.Bluetooth.Sport
 
             this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(this._bleDataModel.ScoreType);
 
-            await Task.Yield();
+            await Task.Delay(System.TimeSpan.FromSeconds(0.2f));
 
             this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(this._bleDataModel.OtherType);
 
@@ -157,6 +162,7 @@ namespace Hsinpa.Bluetooth.Sport
                 MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable.TryGetValue(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.G_foul, out int g_index)) {
                 this._bleDataModel.ScoreType.Set_Raw_Value(h_index, 0);
                 this._bleDataModel.ScoreType.Set_Raw_Value(g_index, 0);
+                this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(this._bleDataModel.ScoreType);
             }
         }
     }

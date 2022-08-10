@@ -52,6 +52,7 @@ namespace Hsinpa.Bluetooth
         }
 
         public void NextTurn_Soccer_Handball(BLEDataModel bleDataModel, DigitalBoardView digitalBoardView, int target_time) {
+            bleDataModel.PrimaryTimer.ResetTimer();
             bleDataModel.PrimaryTimer.StartTimer(target_time);
             bleDataModel.UpdateTime();
             this._digitlaBoardLogicHandler.SportLogicFuncs.SendTimeEvent(bleDataModel.TimeType);

@@ -73,15 +73,20 @@ namespace Hsinpa.Bluetooth.Sport
                 case MessageEventFlag.HsinpaBluetoothEvent.FunctionUI.Next_Turn:
                     _digitlaBoardLogicHandler.SportLogicFuncs.NextTurn(this._bleDataModel.ScoreType);
 
+                    _bleDataModel.PrimaryTimer.ResetTimer();
                     _bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.BasketBallRoundSec);
                     _bleDataModel.UpdateTime();
+
                     this._digitlaBoardLogicHandler.SportLogicFuncs.SendTimeEvent(_bleDataModel.TimeType);
+                    this._digitalBoardView.Action_Timer.Start_Timer.interactable = false;
                     break;
 
                 case MessageEventFlag.HsinpaBluetoothEvent.FunctionUI.Intermission:
+                    _bleDataModel.PrimaryTimer.ResetTimer();
                     _bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.Intermission_15Sec);
                     _bleDataModel.UpdateTime();
                     this._digitlaBoardLogicHandler.SportLogicFuncs.SendTimeEvent(_bleDataModel.TimeType);
+                    this._digitalBoardView.Action_Timer.Start_Timer.interactable = false;
                     break;
 
                 case MessageEventFlag.HsinpaBluetoothEvent.FunctionUI.Short_TimeOut:
@@ -103,7 +108,7 @@ namespace Hsinpa.Bluetooth.Sport
             switch (uiDataStruct.id)
             {
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Start_Timer:
-                    this._bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.BasketBallRoundSec); 
+                    this._bleDataModel.PrimaryTimer.StartTimer(); 
                     break;
             }
         }

@@ -13,6 +13,7 @@ namespace Hsinpa.Bluetooth.View {
         [Header("Control Bar")]
         [SerializeField]
         private Button start_timer;
+        public Button Start_Timer => start_timer;
 
         [SerializeField]
         private Button stop_timer;

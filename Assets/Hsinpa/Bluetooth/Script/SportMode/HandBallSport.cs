@@ -54,9 +54,11 @@ namespace Hsinpa.Bluetooth.Sport
                     break;
 
                 case MessageEventFlag.HsinpaBluetoothEvent.FunctionUI.Intermission:
+                    _bleDataModel.PrimaryTimer.ResetTimer();
                     _bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.Intermission_15Sec);
                     _bleDataModel.UpdateTime();
                     this._digitlaBoardLogicHandler.SportLogicFuncs.SendTimeEvent(_bleDataModel.TimeType);
+                    this._digitalBoardView.Action_Timer.Start_Timer.interactable = false;
                     break;
 
                 case MessageEventFlag.HsinpaBluetoothEvent.FunctionUI.Substitution:
@@ -75,7 +77,7 @@ namespace Hsinpa.Bluetooth.Sport
             switch (uiDataStruct.id)
             {
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Start_Timer:
-                    this._bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.HandballRoundSec);
+                    this._bleDataModel.PrimaryTimer.StartTimer();
                     break;
             }
         }

@@ -51,18 +51,21 @@ namespace Hsinpa.Bluetooth
             _digitalBoardEventSender.SendBluetoothCharacterData(timeType); //Sync time data
         }
 
-        public void NextTurn_Soccer_Handball(BLEDataModel bleDataModel, DigitalBoardView digitalBoardView, int target_time) {
+        public async void NextTurn_Soccer_Handball(BLEDataModel bleDataModel, DigitalBoardView digitalBoardView, int target_time) {
             bleDataModel.PrimaryTimer.ResetTimer();
             bleDataModel.PrimaryTimer.StartTimer(target_time);
             bleDataModel.UpdateTime();
-            this._digitlaBoardLogicHandler.SportLogicFuncs.SendTimeEvent(bleDataModel.TimeType);
+
+            this._digitlaBoardLogicHandler.SportLogicFuncs.SendTimeEvent(bleDataModel.TimeType, counting_mode: 2, time_mode: 1);
+
+            await Task.Delay(100);
 
             bleDataModel.ScoreType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.G_main_attack, 1);
             bleDataModel.ScoreType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.H_main_attack, 0);
             this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(bleDataModel.ScoreType);
 
             digitalBoardView.Action_Function.Next_turn_btn.interactable = false;
-
+            digitalBoardView.Action_Timer.Start_Timer.interactable = false;
         }
 
         public static void CleanDigitalBoard(DigitalBoardBluetoothManager bleManager, DigitalBoardEventSender bleEventSender) {
@@ -100,9 +103,16 @@ namespace Hsinpa.Bluetooth
                 scoreType);
         }
 
-        public void SendTimeEvent(DigitalBoardDataType.CharacterirticsData timeType) {
+        public void SendTimeEvent(DigitalBoardDataType.CharacterirticsData timeType, int counting_mode, int time_mode) {
+            int record_counting_mode = timeType.GetValue(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Counting_mode);
+
+            if (record_counting_mode == counting_mode && (counting_mode != 3))
+                counting_mode = 0;
+
+            Debug.Log("Send counting mode " + counting_mode);
            //Prevent weird behavior from counting double call
-           timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Counting_mode, 0);
+            timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Counting_mode, counting_mode);
+            timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Time_display_mode, time_mode);
 
             this._digitalBoardEventSender.SendBluetoothCharacterData(timeType);
         }

@@ -58,7 +58,7 @@ namespace Hsinpa.Bluetooth.Sport
                     _bleDataModel.PrimaryTimer.ResetTimer();
                     _bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.Intermission_15Sec);
                     _bleDataModel.UpdateTime();
-                    this._digitlaBoardLogicHandler.SportLogicFuncs.SendTimeEvent(_bleDataModel.TimeType);
+                    this._digitlaBoardLogicHandler.SportLogicFuncs.SendTimeEvent(_bleDataModel.TimeType, counting_mode: 2, time_mode: 1);
                     this._digitalBoardView.Action_Timer.Start_Timer.interactable = false;
                     break;
 

@@ -66,18 +66,20 @@ namespace Hsinpa.Bluetooth.Sport
         }
 
 
-        public void OnFunctionUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct)
+        public async void OnFunctionUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct)
         {
             switch (uiDataStruct.id)
             {
                 case MessageEventFlag.HsinpaBluetoothEvent.FunctionUI.Next_Turn:
                     _digitlaBoardLogicHandler.SportLogicFuncs.NextTurn(this._bleDataModel.ScoreType);
 
+                    await Task.Delay(100);
+
                     _bleDataModel.PrimaryTimer.ResetTimer();
                     _bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.BasketBallRoundSec);
                     _bleDataModel.UpdateTime();
 
-                    this._digitlaBoardLogicHandler.SportLogicFuncs.SendTimeEvent(_bleDataModel.TimeType);
+                    this._digitlaBoardLogicHandler.SportLogicFuncs.SendTimeEvent(_bleDataModel.TimeType, counting_mode: 2, time_mode: 8);
                     this._digitalBoardView.Action_Timer.Start_Timer.interactable = false;
                     break;
 
@@ -85,7 +87,7 @@ namespace Hsinpa.Bluetooth.Sport
                     _bleDataModel.PrimaryTimer.ResetTimer();
                     _bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.Intermission_15Sec);
                     _bleDataModel.UpdateTime();
-                    this._digitlaBoardLogicHandler.SportLogicFuncs.SendTimeEvent(_bleDataModel.TimeType);
+                    this._digitlaBoardLogicHandler.SportLogicFuncs.SendTimeEvent(_bleDataModel.TimeType, counting_mode: 2, time_mode: 8);
                     this._digitalBoardView.Action_Timer.Start_Timer.interactable = false;
                     break;
 
@@ -115,10 +117,9 @@ namespace Hsinpa.Bluetooth.Sport
 
         private void OnFoulConfigClick(int team_id) {
             ExtraFoulModal extraFoulModal = Modals.instance.OpenModal<ExtraFoulModal>();
-            string team_label = string.Format(StaticText.Functions.ExtraFoulTitle, (team_id == 0) ? "H " : "G");
+            string team_label = string.Format(StaticText.Functions.ExtraFoulTitle, (team_id == 0) ? "H " : "G", this._bleDataModel.TeamFoulModel.GetTotalFouls(team_id));
 
             extraFoulModal.SetText(team_label, "Player ID", "Fouls Count");
-
             extraFoulModal.SetUp(
             (int player_id) => {
                 extraFoulModal.Input_Two_Field.text = _bleDataModel.TeamFoulModel.GetFouls(team_id, player_id).ToString();
@@ -154,13 +155,15 @@ namespace Hsinpa.Bluetooth.Sport
             string score_foul_id = (team_id == MessageEventFlag.Team_H) ? MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.H_foul : MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.G_foul;
             this._bleDataModel.ScoreType.Set_Value(score_foul_id, total_foul);
 
+            await Task.Delay(System.TimeSpan.FromSeconds(0.1f));
+
             this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(this._bleDataModel.ScoreType);
 
-            await Task.Delay(System.TimeSpan.FromSeconds(0.2f));
+            await Task.Delay(System.TimeSpan.FromSeconds(0.5f));
 
             this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(this._bleDataModel.OtherType);
 
-            await Task.Delay(System.TimeSpan.FromSeconds(1));
+            await Task.Delay(System.TimeSpan.FromSeconds(0.2f));
 
             //Set foul to 0, prevent basketball count down display error
             if (MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable.TryGetValue(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.H_foul, out int h_index) &&

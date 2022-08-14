@@ -190,6 +190,9 @@ namespace Hsinpa.Bluetooth
 
             await Task.Delay(2000);
 
+            //Debug.Log("Mode, " + bleDataModel.ScoreType.GetValue(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.Mode));
+
+            bleDataModel.ScoreType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.Mode, 1);
             this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(bleDataModel.ScoreType);
         }
     }

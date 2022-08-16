@@ -33,6 +33,16 @@ namespace Hsinpa.Bluetooth
             timer_state = true;
         }
 
+        public void SetRelativelyTimer(int relative_second)
+        {
+            this.target_second += System.TimeSpan.FromSeconds(relative_second);
+
+            if (this.target_second < System.TimeSpan.Zero)
+                this.target_second = System.TimeSpan.Zero;
+
+            start_datetime = System.DateTime.UtcNow;
+        }
+
         public void ContinueTimer() { 
             
         }
@@ -59,7 +69,7 @@ namespace Hsinpa.Bluetooth
             if (time_type == Type.RealTime)
                 return System.DateTime.Now.Hour;
 
-            return GetTimeDifferent().Hours;
+            return Mathf.Clamp(GetTimeDifferent().Hours, 0, 1000);
         }
 
         public System.Int32 GetMinute()
@@ -67,7 +77,7 @@ namespace Hsinpa.Bluetooth
             if (time_type == Type.RealTime)
                 return System.DateTime.Now.Minute;
 
-            return GetTimeDifferent().Minutes;
+            return Mathf.Clamp(GetTimeDifferent().Minutes, 0, 1000);
         }
 
         public System.Int32 GetSecond()
@@ -75,7 +85,7 @@ namespace Hsinpa.Bluetooth
             if (time_type == Type.RealTime)
                 return System.DateTime.Now.Second;
 
-            return GetTimeDifferent().Seconds;
+            return Mathf.Clamp(GetTimeDifferent().Seconds, 0, 1000);
         }
 
         private System.TimeSpan GetTimeDifferent()

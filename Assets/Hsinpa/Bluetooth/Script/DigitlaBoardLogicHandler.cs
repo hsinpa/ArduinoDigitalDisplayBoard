@@ -52,8 +52,10 @@ namespace Hsinpa.Bluetooth
             _bleDataModel.TeamFoulModel.Dipose();
             _currentSport.Init();
 
-            Debug.Log(_currentSport.SRP != null);
             _currentSport.SRP.Execute();
+
+            //await Task.Delay(500);
+            //_currentSport.Init();
         }
 
         public void SetUp()
@@ -86,7 +88,8 @@ namespace Hsinpa.Bluetooth
         {
             if (Time.time >= update_record && this._bleDataModel != null)
             {
-                this._bleDataModel.UpdateTime();
+                if (this._bleDataModel.PrimaryTimer.TimerState)
+                    this._bleDataModel.UpdateTime();
 
                 //Debug.Log(p_digital_timer.GetHour());
                 //Debug.Log(p_digital_timer.GetMinute());
@@ -175,6 +178,7 @@ namespace Hsinpa.Bluetooth
 
         private void OnScoreUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct) {
             Debug.Log("OnScoreUIChange " + uiDataStruct.id);
+            uiDataStruct = GetUniqueSportStruct(uiDataStruct);
 
             if (uiDataStruct.exclusive) {
                 var emptyCharSet = new DigitalBoardDataType.CharacterirticsData(10, digitalBoardBluetoothManager.ScoreCharacteristic, MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable);
@@ -189,13 +193,19 @@ namespace Hsinpa.Bluetooth
         }
 
         private void OnTimerUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct) {
-            if (uiDataStruct.sync_struct_table)
-            {
-                int unique_value = this._currentSport.SRP.GetUniqueDataStructWithTable(uiDataStruct.id);
-                if (unique_value >= 0) uiDataStruct.value = unique_value;
-            }
+            uiDataStruct = GetUniqueSportStruct(uiDataStruct);
 
             switch (uiDataStruct.id) {
+
+                case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Second:
+                    this._bleDataModel.PrimaryTimer.SetRelativelyTimer(uiDataStruct.value);
+                    this._bleDataModel.UpdateTime();
+
+                    int time_mode = _currentSport.SRP.GetUniqueDataStructWithTable(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Time_display_mode);
+
+                    SportLogicFuncs.SendTimeEvent(_bleDataModel.TimeType, counting_mode: 3, time_mode: time_mode);
+                    break;
+
                 case MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Stop_Timer:
                     this._bleDataModel.PrimaryTimer.StopTimer();
                     break;
@@ -257,6 +267,16 @@ namespace Hsinpa.Bluetooth
         }
 
         #endregion
+
+    private DigitalBoardDataType.UIDataStruct GetUniqueSportStruct(DigitalBoardDataType.UIDataStruct uiDataStruct) {
+        if (uiDataStruct.sync_struct_table)
+        {
+            int unique_value = this._currentSport.SRP.GetUniqueDataStructWithTable(uiDataStruct.id);
+            if (unique_value >= 0) uiDataStruct.value = unique_value;
+        }
+
+        return uiDataStruct;
+    }
 
         private ISport GetSport(string id) {
             switch (id) {

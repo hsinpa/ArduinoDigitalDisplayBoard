@@ -148,9 +148,11 @@ namespace Hsinpa.Bluetooth.Sport
                                                             this._bleDataModel.ScoreType.BLECharacteristic, 
                                                             this._digitlaBoardLogicHandler.DigitalBoardEventSender);
 
+            string total_foul_id = (team_id == 0) ? MessageEventFlag.HsinpaBluetoothEvent.OtherUI.FoulTotalH : MessageEventFlag.HsinpaBluetoothEvent.OtherUI.FoulTotalG;
             this._bleDataModel.OtherType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.OtherUI.FoulMode, (team_id == 0) ? 1 : 2);
             this._bleDataModel.OtherType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.OtherUI.FoulPlayer, player_id);
             this._bleDataModel.OtherType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.OtherUI.FoulCount, foul_count);
+            this._bleDataModel.OtherType.Set_Value(total_foul_id, total_foul);
 
             string score_foul_id = (team_id == MessageEventFlag.Team_H) ? MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.H_foul : MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.G_foul;
             this._bleDataModel.ScoreType.Set_Value(score_foul_id, total_foul);

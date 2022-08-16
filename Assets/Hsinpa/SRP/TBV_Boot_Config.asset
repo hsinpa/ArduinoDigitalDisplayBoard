@@ -13,6 +13,22 @@ MonoBehaviour:
   m_Name: TBV_Boot_Config
   m_EditorClassIdentifier: 
   uiDataStructs:
+  - id: score@mode
+    category: event@ui_score
+    value: 1
+    max_value: 0
+    is_increment: 0
+    hide_bluetooth_event: 0
+    sync_struct_table: 1
+    exclusive: 0
+  - id: score@mode
+    category: event@ui_score
+    value: 0
+    max_value: 0
+    is_increment: 0
+    hide_bluetooth_event: 1
+    sync_struct_table: 0
+    exclusive: 0
   - id: time_event@sync_real_time
     category: event@ui_time
     value: 1
@@ -50,7 +66,7 @@ MonoBehaviour:
     value: 1
     max_value: 0
     is_increment: 0
-    hide_bluetooth_event: 0
+    hide_bluetooth_event: 1
     sync_struct_table: 0
     exclusive: 0
   uniqueDataStruct:
@@ -65,6 +81,14 @@ MonoBehaviour:
   - id: time@counting_mode
     category: 
     value: 1
+    max_value: 0
+    is_increment: 0
+    hide_bluetooth_event: 0
+    sync_struct_table: 0
+    exclusive: 0
+  - id: score@mode
+    category: 
+    value: 3
     max_value: 0
     is_increment: 0
     hide_bluetooth_event: 0

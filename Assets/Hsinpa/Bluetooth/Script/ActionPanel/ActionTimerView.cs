@@ -24,6 +24,12 @@ namespace Hsinpa.Bluetooth.View {
         [SerializeField]
         private Button sync_timer;
 
+        [SerializeField]
+        private GameObject minutes_panel;
+
+        [SerializeField]
+        private GameObject seconds_panel;
+
         [Header("Count Down")]
         [SerializeField]
         private Button countdown_14_btn;
@@ -94,6 +100,10 @@ namespace Hsinpa.Bluetooth.View {
 
             countdown_14_btn.gameObject.SetActive(true);
             countdown_24_btn.gameObject.SetActive(true);
+
+            minutes_panel.gameObject.SetActive(true);
+            seconds_panel.gameObject.SetActive(true);
+
         }
 
         public void SetSoccerHandballTimeMode()
@@ -103,17 +113,22 @@ namespace Hsinpa.Bluetooth.View {
             start_timer.interactable = false;
             start_timer.gameObject.SetActive(true);
             stop_timer.gameObject.SetActive(true);
+
+            minutes_panel.gameObject.SetActive(true);
+            seconds_panel.gameObject.SetActive(true);
         }
 
         public void Reset()
         {
-
             start_timer.gameObject.SetActive(false);
             stop_timer.gameObject.SetActive(false);
             reset_timer.gameObject.SetActive(false);
             sync_timer.gameObject.SetActive(false);
             countdown_14_btn.gameObject.SetActive(false);
             countdown_24_btn.gameObject.SetActive(false);
+
+            minutes_panel.gameObject.SetActive(false);
+            seconds_panel.gameObject.SetActive(false);
 
             primary_time_text.text = "";
             secondary_time_text.text = "";

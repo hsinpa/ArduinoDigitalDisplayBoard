@@ -56,7 +56,7 @@ namespace Hsinpa.Bluetooth.Model {
 
         private void UpdatePrimaryTimer(DigitalBoardDataType.CharacterirticsData timeType, DigitalTimer timer) {
 
-            if (timer != null && timer.TimerState)
+            if (timer != null)
             {
                 timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Hour, timer.GetHour());
                 timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Minute, timer.GetMinute());

@@ -100,6 +100,7 @@ namespace SimpleEvent.ID {
                 public const string Stop_Timer = "time_event@stop_timer";
                 public const string Reset_Timer = "time_event@reset_timer";
 
+
                 //public const string CountDown14s = "time_event@count_down_14s";
                 //public const string CountDown24s = "time_event@count_down_24s";
 
@@ -118,16 +119,14 @@ namespace SimpleEvent.ID {
                 public const string FoulMode = "other@foul_mode";
                 public const string FoulPlayer = "other@foul_player";
                 public const string FoulCount = "other@foul_count";
+                public const string FoulTotalH = "other@foul_total_h";
+                public const string FoulTotalG = "other@foul_total_g";
 
                 //Soccer, Handball
                 public const string Substitution = "other@substitution";
                 public const string Team = "other@team";
                 public const string OnCourtPlayer = "other@on_court_player";
                 public const string OffCourtPlayer = "other@off_court_player";
-
-                //Other
-                public const string OtherData1 = "other@other_data_1";
-                public const string OtherData2 = "other@other_data_2";
             }
 
             public static Dictionary<string, int> ScoreIndexTable = new Dictionary<string, int>() {
@@ -174,8 +173,8 @@ namespace SimpleEvent.ID {
                 { OtherUI.OnCourtPlayer, 9},
                 { OtherUI.OffCourtPlayer, 10},
 
-                { OtherUI.OtherData1, 11},
-                { OtherUI.OtherData2, 12},
+                { OtherUI.FoulTotalH, 11},
+                { OtherUI.FoulTotalG, 12},
             };
 
 

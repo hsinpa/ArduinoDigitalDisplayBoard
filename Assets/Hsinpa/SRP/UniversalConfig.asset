@@ -29,12 +29,4 @@ MonoBehaviour:
     hide_bluetooth_event: 1
     sync_struct_table: 0
     exclusive: 0
-  - id: score@mode
-    category: event@ui_score
-    value: 0
-    max_value: 0
-    is_increment: 0
-    hide_bluetooth_event: 0
-    sync_struct_table: 0
-    exclusive: 0
   uniqueDataStruct: []

@@ -13,6 +13,38 @@ MonoBehaviour:
   m_Name: Soccer_Boot_Config
   m_EditorClassIdentifier: 
   uiDataStructs:
+  - id: score@h_foul
+    category: event@ui_score
+    value: 20
+    max_value: 0
+    is_increment: 0
+    hide_bluetooth_event: 1
+    sync_struct_table: 0
+    exclusive: 0
+  - id: score@g_foul
+    category: event@ui_score
+    value: 20
+    max_value: 0
+    is_increment: 0
+    hide_bluetooth_event: 1
+    sync_struct_table: 0
+    exclusive: 0
+  - id: score@mode
+    category: event@ui_score
+    value: 1
+    max_value: 0
+    is_increment: 0
+    hide_bluetooth_event: 0
+    sync_struct_table: 1
+    exclusive: 0
+  - id: score@mode
+    category: event@ui_score
+    value: 0
+    max_value: 0
+    is_increment: 0
+    hide_bluetooth_event: 1
+    sync_struct_table: 0
+    exclusive: 0
   - id: time@counting_mode
     category: event@ui_time
     value: 1
@@ -21,6 +53,14 @@ MonoBehaviour:
     hide_bluetooth_event: 1
     sync_struct_table: 1
     exclusive: 0
+  - id: score@h_main_attack
+    category: event@ui_score
+    value: 1
+    max_value: 0
+    is_increment: 0
+    hide_bluetooth_event: 1
+    sync_struct_table: 0
+    exclusive: 0
   - id: time@time_display_mode
     category: event@ui_time
     value: 0
@@ -28,14 +68,6 @@ MonoBehaviour:
     is_increment: 0
     hide_bluetooth_event: 0
     sync_struct_table: 1
-    exclusive: 0
-  - id: score@h_main_attack
-    category: event@ui_score
-    value: 1
-    max_value: 0
-    is_increment: 0
-    hide_bluetooth_event: 0
-    sync_struct_table: 0
     exclusive: 0
   uniqueDataStruct:
   - id: time@time_display_mode
@@ -62,5 +94,11 @@ MonoBehaviour:
     hide_bluetooth_event: 0
     sync_struct_table: 0
     exclusive: 0
-  constraint_array:
-  - sport_mode@basketball
+  - id: score@mode
+    category: 
+    value: 6
+    max_value: 0
+    is_increment: 0
+    hide_bluetooth_event: 0
+    sync_struct_table: 0
+    exclusive: 0

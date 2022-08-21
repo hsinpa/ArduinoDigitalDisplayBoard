@@ -198,5 +198,22 @@ namespace Hsinpa.Bluetooth
             await Task.Yield();
             SendTimeEvent(bleDataModel.TimeType, counting_mode: 2, time_mode: 0);
         }
+
+        public static void SendSimpleMessage(DigitalBoardDataType.UIDataStruct uiDataStruct)
+        {
+            Utility.SimpleEventSystem.Send(uiDataStruct.category, uiDataStruct);
+        }
+
+        public async void ResendData(BLEDataModel bleDataModel) {
+
+            SendSimpleMessage(new DigitalBoardDataType.UIDataStruct() { id = MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Stop_Timer, 
+                                                                        category = MessageEventFlag.HsinpaBluetoothEvent.UIEvent.time });
+
+            this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(bleDataModel.ScoreType);
+
+            await Task.Delay(500);
+
+            this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(bleDataModel.TimeType);
+        }
     }
 }

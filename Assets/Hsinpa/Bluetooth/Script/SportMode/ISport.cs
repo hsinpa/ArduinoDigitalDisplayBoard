@@ -20,6 +20,7 @@ namespace Hsinpa.Bluetooth.Sport
 
         void Init();
         void Exist();
+        void ExecuteReconnectionActions();
 
         void OnScoreUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct);
         void OnTimerUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct);

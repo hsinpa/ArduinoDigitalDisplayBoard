@@ -6,6 +6,7 @@ using System;
 using UnityEngine.Android;
 using Hsinpa.Utility;
 using SimpleEvent.ID;
+using Hsinpa.Bluetooth.View;
 
 namespace Hsinpa.Bluetooth
 {
@@ -14,10 +15,13 @@ namespace Hsinpa.Bluetooth
     {
         [Header("UI View")]
         [SerializeField]
-        private GameObject hintModeView;
+        private HintView hintModeView;
 
         [SerializeField]
         private SportGridLogic sportModeView;
+
+        [SerializeField]
+        private DigitalCharacterLogic digitalCharacterLogic;
 
         [SerializeField]
         private DigitalBoardView digitalBoardModeView;
@@ -60,6 +64,7 @@ namespace Hsinpa.Bluetooth
             {
                 Hsinpa.Utility.SimpleEventSystem.Dispose();
 
+                hintModeView.SetText(StaticText.Hint.SearchBLE);
                 hintModeView.gameObject.SetActive(true);
 
                 SimpleEventSystem.CustomEventListener += OnSimpleEventSystem;
@@ -144,6 +149,11 @@ namespace Hsinpa.Bluetooth
 
             if (OnDisconnect != null)
                 OnDisconnect();
+
+            helper.ScanNearbyDevices();
+
+            hintModeView.SetText(StaticText.Hint.ReconnectionBLE);
+            hintModeView.gameObject.SetActive(true);
         }
 
 
@@ -189,6 +199,8 @@ namespace Hsinpa.Bluetooth
 
             if (id == MessageEventFlag.HsinpaBluetoothEvent.UIEvent.sport_mode_view)
             {
+                digitalCharacterLogic.Dispose();
+
                 sportModeView.gameObject.SetActive(true);
                 digitalBoardModeView.gameObject.SetActive(false);
                 digitalCharacterView.gameObject.SetActive(false);

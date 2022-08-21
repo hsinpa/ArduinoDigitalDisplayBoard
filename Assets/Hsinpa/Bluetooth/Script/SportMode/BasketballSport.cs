@@ -55,10 +55,12 @@ namespace Hsinpa.Bluetooth.Sport
             switch (uiDataStruct.id)
             {
                 case MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.H_foul:
-                    OnFoulConfigClick(MessageEventFlag.Team_H);
+                    if (!uiDataStruct.hide_bluetooth_event)
+                        OnFoulConfigClick(MessageEventFlag.Team_H);
                     return;
                 case MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.G_foul:
-                    OnFoulConfigClick(MessageEventFlag.Team_G);
+                    if (!uiDataStruct.hide_bluetooth_event)
+                        OnFoulConfigClick(MessageEventFlag.Team_G);
                     return;
             }
 
@@ -154,10 +156,8 @@ namespace Hsinpa.Bluetooth.Sport
             this._bleDataModel.OtherType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.OtherUI.FoulCount, foul_count);
             this._bleDataModel.OtherType.Set_Value(total_foul_id, total_foul);
 
-            string score_foul_id = (team_id == MessageEventFlag.Team_H) ? MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.H_foul : MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.G_foul;
-            this._bleDataModel.ScoreType.Set_Value(score_foul_id, total_foul);
-
-            await Task.Delay(System.TimeSpan.FromSeconds(0.1f));
+            //string score_foul_id = (team_id == MessageEventFlag.Team_H) ? MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.H_foul : MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.G_foul;
+            //this._bleDataModel.ScoreType.Set_Value(score_foul_id, total_foul);
 
             this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(this._bleDataModel.ScoreType);
 
@@ -168,12 +168,19 @@ namespace Hsinpa.Bluetooth.Sport
             await Task.Delay(System.TimeSpan.FromSeconds(0.2f));
 
             //Set foul to 0, prevent basketball count down display error
-            if (MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable.TryGetValue(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.H_foul, out int h_index) &&
-                MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable.TryGetValue(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.G_foul, out int g_index)) {
-                this._bleDataModel.ScoreType.Set_Raw_Value(h_index, 0);
-                this._bleDataModel.ScoreType.Set_Raw_Value(g_index, 0);
-                this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(this._bleDataModel.ScoreType);
-            }
+            this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(this._bleDataModel.ScoreType);
+
+            //if (MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable.TryGetValue(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.H_foul, out int h_index) &&
+            //    MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable.TryGetValue(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.G_foul, out int g_index)) {
+            //    this._bleDataModel.ScoreType.Set_Raw_Value(h_index, 0);
+            //    this._bleDataModel.ScoreType.Set_Raw_Value(g_index, 0);
+            //    this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(this._bleDataModel.ScoreType);
+            //}
+        }
+
+        public void ExecuteReconnectionActions()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

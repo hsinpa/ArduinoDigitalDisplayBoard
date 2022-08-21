@@ -83,6 +83,9 @@ namespace Hsinpa.Bluetooth.Sport
             }
         }
 
-
+        public void ExecuteReconnectionActions()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

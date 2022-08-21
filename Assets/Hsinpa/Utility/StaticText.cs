@@ -11,5 +11,10 @@ namespace SimpleEvent.ID
             public const string SubstitutionTitle = "Team {0}: Substitution";
         }
 
+        public class Hint
+        {
+            public const string SearchBLE = "Searching<br>Connecting to BLE Board . . .";
+            public const string ReconnectionBLE = "Connection failed<br>Try reconnecting . . .";
+        }
     }
 }

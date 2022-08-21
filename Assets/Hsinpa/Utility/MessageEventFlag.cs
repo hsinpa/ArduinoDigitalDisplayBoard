@@ -125,6 +125,9 @@ namespace SimpleEvent.ID {
                 //Soccer, Handball
                 public const string Substitution = "other@substitution";
                 public const string Team = "other@team";
+
+                public const string End = "other@end";
+
                 public const string OnCourtPlayer = "other@on_court_player";
                 public const string OffCourtPlayer = "other@off_court_player";
             }
@@ -173,8 +176,10 @@ namespace SimpleEvent.ID {
                 { OtherUI.OnCourtPlayer, 9},
                 { OtherUI.OffCourtPlayer, 10},
 
-                { OtherUI.FoulTotalH, 11},
-                { OtherUI.FoulTotalG, 12},
+                { OtherUI.End, 11},
+
+                { OtherUI.FoulTotalH, 12},
+                { OtherUI.FoulTotalG, 13},
             };
 
 

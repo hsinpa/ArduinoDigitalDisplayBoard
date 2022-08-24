@@ -7,6 +7,7 @@ using UnityEngine.Android;
 using Hsinpa.Utility;
 using SimpleEvent.ID;
 using Hsinpa.Bluetooth.View;
+using Hsinpa.Bluetooth.SignalTesting;
 
 namespace Hsinpa.Bluetooth
 {
@@ -14,6 +15,9 @@ namespace Hsinpa.Bluetooth
     public class DigitalBoardBluetoothManager : MonoBehaviour
     {
         [Header("UI View")]
+        [SerializeField]
+        private SignalTestScript signalTestScript;
+
         [SerializeField]
         private HintView hintModeView;
 
@@ -93,6 +97,7 @@ namespace Hsinpa.Bluetooth
             }
 
             digitlaBoardLogicHandler.SetUp();
+            signalTestScript.SetUp(digitlaBoardLogicHandler.DigitalBoardEventSender, scoreCharacteristic, timeCharacteristic);
         }
 
         void OnDataReceived(BluetoothHelper helper)
@@ -128,8 +133,8 @@ namespace Hsinpa.Bluetooth
                 }
             }
 
-            helper.Subscribe(timeCharacteristic);
-            helper.Subscribe(otherCharacteristic);
+            //helper.Subscribe(timeCharacteristic);
+            //helper.Subscribe(otherCharacteristic);
 
             hintModeView.gameObject.SetActive(false);
 
@@ -204,7 +209,14 @@ namespace Hsinpa.Bluetooth
                 sportModeView.gameObject.SetActive(true);
                 digitalBoardModeView.gameObject.SetActive(false);
                 digitalCharacterView.gameObject.SetActive(false);
+                signalTestScript.gameObject.SetActive(false);
                 digitlaBoardLogicHandler.Dispose();
+            }
+
+            if (id == MessageEventFlag.HsinpaBluetoothEvent.UIEvent.signal_testing_mode_view)
+            {
+                sportModeView.gameObject.SetActive(false);
+                signalTestScript.gameObject.SetActive(true);
             }
 
             if (id == MessageEventFlag.HsinpaBluetoothEvent.UIEvent.word_display_mode_view)

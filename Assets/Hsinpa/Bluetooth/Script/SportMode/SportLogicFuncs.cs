@@ -204,14 +204,30 @@ namespace Hsinpa.Bluetooth
             Utility.SimpleEventSystem.Send(uiDataStruct.category, uiDataStruct);
         }
 
-        public async void ResendData(BLEDataModel bleDataModel) {
+        public async void ResendData(DigitalMessageSRP digitalMessageSRP, BLEDataModel bleDataModel) {
 
-            SendSimpleMessage(new DigitalBoardDataType.UIDataStruct() { id = MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Stop_Timer, 
-                                                                        category = MessageEventFlag.HsinpaBluetoothEvent.UIEvent.time });
+            //SendSimpleMessage(new DigitalBoardDataType.UIDataStruct() { id = MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Stop_Timer, 
+            //                                                            category = MessageEventFlag.HsinpaBluetoothEvent.UIEvent.time });
+
+            int counting_mode = digitalMessageSRP.GetUniqueDataStructWithTable(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Counting_mode);
+            int time_mode = digitalMessageSRP.GetUniqueDataStructWithTable(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Time_display_mode);
+            int score_mode = digitalMessageSRP.GetUniqueDataStructWithTable(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.Mode);
+
+            bleDataModel.ScoreType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.Mode, score_mode);
+            bleDataModel.TimeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Time_display_mode, time_mode);
+            bleDataModel.TimeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Counting_mode, counting_mode);
+
+            await Task.Delay(300);
 
             this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(bleDataModel.ScoreType);
 
-            await Task.Delay(500);
+            await Task.Delay(300);
+
+            bleDataModel.ScoreType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.Mode, 0);
+
+            this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(bleDataModel.ScoreType);
+
+            await Task.Delay(300);
 
             this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(bleDataModel.TimeType);
         }

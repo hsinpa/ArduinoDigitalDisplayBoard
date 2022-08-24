@@ -61,6 +61,7 @@ namespace Hsinpa.Bluetooth
         public void SetUp()
         {
             digitalBoardBluetoothManager.OnConnect += OnBluetoothConnect;
+            digitalBoardBluetoothManager.OnDisconnect += OnBluetoothDisconnect;
 
             this._bleDataModel = new BLEDataModel(
                 scoreType: new DigitalBoardDataType.CharacterirticsData(10, digitalBoardBluetoothManager.ScoreCharacteristic, MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable),
@@ -247,12 +248,39 @@ namespace Hsinpa.Bluetooth
         }
 
         private void OnBluetoothConnect() {
+            if (this._currentSport != null)
+            {
+                SportLogicFuncs.SendSimpleMessage(new DigitalBoardDataType.UIDataStruct()
+                {
+                    id = MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Start_Timer,
+                    category = MessageEventFlag.HsinpaBluetoothEvent.UIEvent.time
+                });
+
+                SportLogicFuncs.SendSimpleMessage(new DigitalBoardDataType.UIDataStruct()
+                {
+                    id = MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Sync_Time,
+                    category = MessageEventFlag.HsinpaBluetoothEvent.UIEvent.time
+                });
+
+                this._currentSport.ExecuteReconnectionActions();
+            }
+        }
+
+        private void OnBluetoothDisconnect()
+        {
+            //Stop timer when disconnect
+            SportLogicFuncs.SendSimpleMessage(new DigitalBoardDataType.UIDataStruct()
+            {
+                id = MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Stop_Timer,
+                category = MessageEventFlag.HsinpaBluetoothEvent.UIEvent.time
+            });
         }
 
         private void OnDestroy()
         {
             SimpleEventSystem.CustomEventListener -= OnSimpleEventSystem;
             digitalBoardBluetoothManager.OnConnect -= OnBluetoothConnect;
+            digitalBoardBluetoothManager.OnDisconnect -= OnBluetoothDisconnect;
         }
 
         public void Dispose()

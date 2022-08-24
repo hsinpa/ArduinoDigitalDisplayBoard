@@ -85,7 +85,7 @@ namespace Hsinpa.Bluetooth.Sport
 
         public void ExecuteReconnectionActions()
         {
-            throw new System.NotImplementedException();
+            this._digitlaBoardLogicHandler.SportLogicFuncs.ResendData(this._digitalMessageSRP, this._bleDataModel);
         }
     }
 }

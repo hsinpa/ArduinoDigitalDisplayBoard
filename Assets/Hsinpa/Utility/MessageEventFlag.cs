@@ -52,6 +52,7 @@ namespace SimpleEvent.ID {
 
                 public const string sport_mode_view = "event@ui_sport_mode";
                 public const string word_display_mode_view = "event@ui_word_display_mode";
+                public const string signal_testing_mode_view = "event@ui_signal_testing_mode";
                 public const string digitalboard_mode_view = "event@ui_digitalboard_mode";
             }
 

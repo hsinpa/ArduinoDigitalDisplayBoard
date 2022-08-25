@@ -37,6 +37,13 @@ namespace Hsinpa.Bluetooth
             characterView.UpperCharacterTxtField.OnColorDropDownChange += (int index) => { OnValueChange(); };
             characterView.LowerCharacterTxtField.OnCharInputfieldChange += (string v) => { OnValueChange(); };
             characterView.LowerCharacterTxtField.OnColorDropDownChange += (int index) => { OnValueChange(); };
+
+            characterView.Force_rotate_toggle.onValueChanged.AddListener((bool ison) => { OnValueChange(); });
+
+            characterView.Rotate_speed_slider.onValueChanged.AddListener((float v) => {
+                characterView.Rotate_slider_title.text = string.Format(SimpleEvent.ID.StaticText.Hint.SliderTitle, v.ToString());
+                OnValueChange();
+            });
         }
 
         private void OnEnable()
@@ -57,9 +64,11 @@ namespace Hsinpa.Bluetooth
             int upperCharacterIndex = maxCharacterSize;
             int lowerCharacterIndex = maxCharacterSize;
 
+            int timestamp = (int)characterView.Rotate_speed_slider.value * 1000;
+
             while (!cancelSourceToken.Token.IsCancellationRequested)
             {
-                await Task.Delay(1000, cancelSourceToken.Token);
+                await Task.Delay(timestamp, cancelSourceToken.Token);
 
                 upperCharacterIndex = PerformLoopEffect(characterView.UpperCharacterTxtField.InputText, characterView.UpperCharacterTxtField.ColorIndex, 0, upperCharacterIndex);
                 lowerCharacterIndex = PerformLoopEffect(characterView.LowerCharacterTxtField.InputText, characterView.LowerCharacterTxtField.ColorIndex, 10, lowerCharacterIndex);
@@ -92,7 +101,7 @@ namespace Hsinpa.Bluetooth
         {
             if (full_text.Length <= 0) return current_index;
 
-            if (full_text.Length <= maxCharacterSize) {
+            if (full_text.Length <= maxCharacterSize && !characterView.Force_rotate_toggle.isOn) {
                 TxtInputValue(_characterType, full_text, color_index, offset);
 
                 return current_index;

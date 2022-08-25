@@ -15,6 +15,8 @@ namespace SimpleEvent.ID
         {
             public const string SearchBLE = "Searching<br>Connecting to BLE Board . . .";
             public const string ReconnectionBLE = "Connection failed<br>Try reconnecting . . .";
+
+            public const string SliderTitle = "Rotation Speed: {0} seconds";
         }
     }
 }

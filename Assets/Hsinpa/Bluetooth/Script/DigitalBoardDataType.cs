@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace Hsinpa.Bluetooth
 {
@@ -13,6 +14,9 @@ namespace Hsinpa.Bluetooth
         public class CharacterirticsData {
             private byte[] raw_data;
             public byte[] Data => raw_data;
+
+            public int[] IntData => this.raw_data.Select(x => (int)x).ToArray();
+
 
             private Dictionary<string, int> index_table;
             private int length;

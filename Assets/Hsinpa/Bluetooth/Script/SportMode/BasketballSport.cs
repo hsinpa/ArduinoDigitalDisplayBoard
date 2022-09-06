@@ -39,7 +39,7 @@ namespace Hsinpa.Bluetooth.Sport
         public void Init()
         {
             _bleDataModel.PrimaryTimer.SetTimeType(DigitalTimer.Type.Timer_CountDown);
-            _bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.BasketBallRoundSec); //10 mins
+            _bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.BasketBallRoundMin); //10 mins
             _bleDataModel.UpdateTime();
 
             _digitalBoardView.SetBasketballMode();
@@ -55,12 +55,13 @@ namespace Hsinpa.Bluetooth.Sport
             switch (uiDataStruct.id)
             {
                 case MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.H_foul:
-                    if (!uiDataStruct.hide_bluetooth_event)
-                        OnFoulConfigClick(MessageEventFlag.Team_H);
-                    return;
                 case MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.G_foul:
+
+                    int team_id = (uiDataStruct.id == MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.H_foul) ? MessageEventFlag.Team_H : MessageEventFlag.Team_G;
                     if (!uiDataStruct.hide_bluetooth_event)
-                        OnFoulConfigClick(MessageEventFlag.Team_G);
+                        OnFoulConfigClick(team_id);
+                    else
+                        _bleDataModel.ScoreType.Set_Value(uiDataStruct.id, uiDataStruct.value);
                     return;
             }
 
@@ -78,7 +79,7 @@ namespace Hsinpa.Bluetooth.Sport
                     await Task.Delay(100);
 
                     _bleDataModel.PrimaryTimer.ResetTimer();
-                    _bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.BasketBallRoundSec);
+                    _bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.BasketBallRoundMin);
                     _bleDataModel.UpdateTime();
 
                     this._digitlaBoardLogicHandler.SportLogicFuncs.SendTimeEvent(_bleDataModel.TimeType, counting_mode: 2, time_mode: 8);
@@ -87,7 +88,7 @@ namespace Hsinpa.Bluetooth.Sport
 
                 case MessageEventFlag.HsinpaBluetoothEvent.FunctionUI.Intermission:
                     _bleDataModel.PrimaryTimer.ResetTimer();
-                    _bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.Intermission_15Sec);
+                    _bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.Intermission_15Min);
                     _bleDataModel.UpdateTime();
                     this._digitlaBoardLogicHandler.SportLogicFuncs.SendTimeEvent(_bleDataModel.TimeType, counting_mode: 2, time_mode: 8);
                     this._digitalBoardView.Action_Timer.Start_Timer.interactable = false;

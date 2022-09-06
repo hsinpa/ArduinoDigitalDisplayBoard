@@ -39,7 +39,7 @@ namespace Hsinpa.Bluetooth.Sport
         public void Init()
         {
             _bleDataModel.PrimaryTimer.SetTimeType(DigitalTimer.Type.Timer_CountDown);
-            _bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.HandballRoundSec);
+            _bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.HandballRoundMin);
             _bleDataModel.UpdateTime();
 
             _digitalBoardView.SetHandballMode();
@@ -50,12 +50,12 @@ namespace Hsinpa.Bluetooth.Sport
             switch (uiDataStruct.id)
             {
                 case MessageEventFlag.HsinpaBluetoothEvent.FunctionUI.Next_Turn:
-                    this._digitlaBoardLogicHandler.SportLogicFuncs.NextTurn_Soccer_Handball(_bleDataModel, _digitalBoardView, MessageEventFlag.Const.HandballRoundSec);
+                    this._digitlaBoardLogicHandler.SportLogicFuncs.NextTurn_Soccer_Handball(_bleDataModel, _digitalBoardView, MessageEventFlag.Const.HandballRoundMin);
                     break;
 
                 case MessageEventFlag.HsinpaBluetoothEvent.FunctionUI.Intermission:
                     _bleDataModel.PrimaryTimer.ResetTimer();
-                    _bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.Intermission_15Sec);
+                    _bleDataModel.PrimaryTimer.StartTimer(MessageEventFlag.Const.Intermission_10Min);
                     _bleDataModel.UpdateTime();
                     this._digitlaBoardLogicHandler.SportLogicFuncs.SendTimeEvent(_bleDataModel.TimeType, counting_mode: 2, time_mode: 1);
                     this._digitalBoardView.Action_Timer.Start_Timer.interactable = false;

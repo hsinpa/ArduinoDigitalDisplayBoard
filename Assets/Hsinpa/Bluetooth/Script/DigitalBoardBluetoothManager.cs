@@ -211,6 +211,8 @@ namespace Hsinpa.Bluetooth
                 digitalCharacterView.gameObject.SetActive(false);
                 signalTestScript.gameObject.SetActive(false);
                 digitlaBoardLogicHandler.Dispose();
+
+                BLEReconnection.Dispose();
             }
 
             if (id == MessageEventFlag.HsinpaBluetoothEvent.UIEvent.signal_testing_mode_view)

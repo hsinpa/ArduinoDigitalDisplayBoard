@@ -14120,6 +14120,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upperCharacterTxtField: {fileID: 5604305937287084537}
   lowerCharacterTxtField: {fileID: 1262944427439757391}
+  rotate_speed_slider: {fileID: 4912571029591803783}
+  rotate_slider_title: {fileID: 4089741842065154899}
+  force_rotate_toggle: {fileID: 7751060260306566735}
 --- !u!1 &7692392577341991779
 GameObject:
   m_ObjectHideFlags: 0

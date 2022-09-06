@@ -99,6 +99,9 @@ namespace Hsinpa.Bluetooth
                 if (this._currentSport != null && this._currentSport.SportStruct.id == MessageEventFlag.HsinpaBluetoothEvent.SportMode.Default)
                     SyncTimeData();
 
+                if (this._currentSport != null)
+                    BLEReconnection.Save(this._currentSport.SportStruct.id, this._bleDataModel);
+
                 update_record = Time.time + update_period;
             }
         }

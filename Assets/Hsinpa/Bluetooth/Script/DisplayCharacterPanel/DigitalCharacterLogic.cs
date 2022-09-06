@@ -39,11 +39,11 @@ namespace Hsinpa.Bluetooth
             characterView.LowerCharacterTxtField.OnColorDropDownChange += (int index) => { OnValueChange(); };
 
             characterView.Force_rotate_toggle.onValueChanged.AddListener((bool ison) => { OnValueChange(); });
-
             characterView.Rotate_speed_slider.onValueChanged.AddListener((float v) => {
-                characterView.Rotate_slider_title.text = string.Format(SimpleEvent.ID.StaticText.Hint.SliderTitle, v.ToString());
-                OnValueChange();
+                UpdateSliderText(v);
             });
+
+            UpdateSliderText(characterView.Rotate_speed_slider.value);
         }
 
         private void OnEnable()
@@ -55,7 +55,6 @@ namespace Hsinpa.Bluetooth
         private async void OnValueChange() {
             //TxtInputValue(_characterType, characterView.UpperCharacterTxtField.InputText, characterView.UpperCharacterTxtField.ColorIndex, 0);
             //TxtInputValue(_characterType, characterView.LowerCharacterTxtField.InputText, characterView.LowerCharacterTxtField.ColorIndex, 10);
-
             if (cancelSourceToken != null)
                 cancelSourceToken.Cancel();
 
@@ -64,23 +63,40 @@ namespace Hsinpa.Bluetooth
             int upperCharacterIndex = maxCharacterSize;
             int lowerCharacterIndex = maxCharacterSize;
 
-            int timestamp = (int)characterView.Rotate_speed_slider.value * 1000;
-
-            while (!cancelSourceToken.Token.IsCancellationRequested)
+            bool shouldKeepLooping = characterView.Force_rotate_toggle.isOn ||
+                                        (characterView.UpperCharacterTxtField.InputText.Length > maxCharacterSize ||
+                                        characterView.LowerCharacterTxtField.InputText.Length > maxCharacterSize);
+            try
             {
-                await Task.Delay(timestamp, cancelSourceToken.Token);
+                while (!cancelSourceToken.Token.IsCancellationRequested) {
+                    int timestamp = (int)(characterView.Rotate_speed_slider.value * 1000);
+                    await Task.Delay(timestamp, cancelSourceToken.Token);
 
-                upperCharacterIndex = PerformLoopEffect(characterView.UpperCharacterTxtField.InputText, characterView.UpperCharacterTxtField.ColorIndex, 0, upperCharacterIndex);
-                lowerCharacterIndex = PerformLoopEffect(characterView.LowerCharacterTxtField.InputText, characterView.LowerCharacterTxtField.ColorIndex, 10, lowerCharacterIndex);
+                    upperCharacterIndex = PerformLoopEffect(characterView.UpperCharacterTxtField.InputText, characterView.UpperCharacterTxtField.ColorIndex, 0, upperCharacterIndex);
+                    lowerCharacterIndex = PerformLoopEffect(characterView.LowerCharacterTxtField.InputText, characterView.LowerCharacterTxtField.ColorIndex, 10, lowerCharacterIndex);
 
-                DigitalBoardDataType.BluetoothDataStruct bluetoothDataStruct = new DigitalBoardDataType.BluetoothDataStruct()
-                {
-                    characteristic = _characterType.BLECharacteristic,
-                    data = _characterType.Data.ToArray()
-                };
+                    DigitalBoardDataType.BluetoothDataStruct bluetoothDataStruct = new DigitalBoardDataType.BluetoothDataStruct()
+                    {
+                        characteristic = _characterType.BLECharacteristic,
+                        data = _characterType.Data.ToArray()
+                    };
 
-                digitalBoardEventSender.SendBluetoothData(bluetoothDataStruct);
+                    digitalBoardEventSender.SendBluetoothData(bluetoothDataStruct);
+
+                    if (!shouldKeepLooping) {
+                        cancelSourceToken.Cancel();
+                        break;
+                    }
+                }
             }
+            catch {
+                Debug.Log("Dispose call");
+            }            
+        }
+
+        private void UpdateSliderText(double v) {
+            double round_value = System.Math.Round(v, 1);
+            characterView.Rotate_slider_title.text = string.Format(SimpleEvent.ID.StaticText.Hint.SliderTitle, round_value.ToString());
         }
 
         private void TxtInputValue(DigitalBoardDataType.CharacterirticsData characterType, string text, int color_index, int offset) {

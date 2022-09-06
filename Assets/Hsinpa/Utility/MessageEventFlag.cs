@@ -10,11 +10,12 @@ namespace SimpleEvent.ID {
             public const System.Int32 ScoreMode3 = 0x03;
             public const System.Int32 ScoreMode9 = 0x09;
 
-            public const int BasketBallRoundSec = 600;//10 mins
-            public const int Intermission_15Sec = 900; //15 mins
+            public const int BasketBallRoundMin = 600;//10 mins
+            public const int Intermission_15Min = 900; //15 mins
+            public const int Intermission_10Min = 600; //15 mins
 
-            public const int SoccerRoundSec = 2700;//45 mins
-            public const int HandballRoundSec = 1800;//30 mins
+            public const int SoccerRoundMin = 2700;//45 mins
+            public const int HandballRoundMin = 1800;//30 mins
 
         }
         public const int MaxTurn = 7;
@@ -25,6 +26,9 @@ namespace SimpleEvent.ID {
 
         public static readonly byte[] ResetTimerCommand = new byte[12] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00 };
 
+        public class PlayerPref {
+            public const string Save = "pref@save";
+        }
 
         public class HsinpaBluetoothEvent {
 
@@ -183,12 +187,21 @@ namespace SimpleEvent.ID {
                 { OtherUI.FoulTotalG, 13},
             };
 
-
             public struct SportSettingStruct {
                 public string id;
                 public string title;
             }
 
+            public struct SportSaveStruct {
+                public string sport_id;
+                public int[] scores;
+                public int[] times;
+                public int[] others;
+
+                public long timestamp;
+
+                public bool Is_Valid => !string.IsNullOrEmpty(sport_id);
+            }
 
             public static Dictionary<string, SportSettingStruct> SportSettingTable = new Dictionary<string, SportSettingStruct>() {
                 { SportMode.Default, new SportSettingStruct() { id = SportMode.Default, title = "Internal Testing" } },

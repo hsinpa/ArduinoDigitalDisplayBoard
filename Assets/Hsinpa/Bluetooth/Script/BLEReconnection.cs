@@ -6,6 +6,7 @@ using Hsinpa.Pref;
 using Hsinpa.Bluetooth.Model;
 using System;
 using SimpleEvent.ID;
+using static SimpleEvent.ID.MessageEventFlag;
 
 namespace Hsinpa.Bluetooth
 {
@@ -15,14 +16,17 @@ namespace Hsinpa.Bluetooth
             return PlayerPrefLoader.GetJSON<MessageEventFlag.HsinpaBluetoothEvent.SportSaveStruct>(MessageEventFlag.PlayerPref.Save);
         }
 
-        public static void Save(string sport_id, BLEDataModel bleDataModel) {
+        public static void Save(string sport_id, BLEDataModel bleDataModel ) {
             var sportSaveStruct = new SimpleEvent.ID.MessageEventFlag.HsinpaBluetoothEvent.SportSaveStruct();
             
             sportSaveStruct.sport_id = sport_id;
             sportSaveStruct.scores = bleDataModel.ScoreType.IntData;
-            sportSaveStruct.times = bleDataModel.TimeType.IntData;
             sportSaveStruct.others = bleDataModel.OtherType.IntData;
-            sportSaveStruct.timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
+
+            sportSaveStruct.time_left_second = (int)bleDataModel.PrimaryTimer.Leak_datetime.TotalSeconds;
+
+            sportSaveStruct.timestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+            sportSaveStruct.foulStructs = bleDataModel.TeamFoulModel.playersStruct;
 
             PlayerPrefLoader.SaveJSON(MessageEventFlag.PlayerPref.Save, sportSaveStruct);
         }

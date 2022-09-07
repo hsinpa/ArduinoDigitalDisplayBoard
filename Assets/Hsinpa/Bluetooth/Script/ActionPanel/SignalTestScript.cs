@@ -23,8 +23,8 @@ namespace Hsinpa.Bluetooth.SignalTesting
         public void SetUp(DigitalBoardEventSender digitalBoardEventSender, BluetoothHelperCharacteristic scoreCharacteristic, BluetoothHelperCharacteristic timeCharacteristic) {
             this._timer = new DigitalTimer();
             _digitalBoardEventSender = digitalBoardEventSender;
-            _scoreCharacteristic = new DigitalBoardDataType.CharacterirticsData(10, scoreCharacteristic, MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable);
-            _timeCharacteristic = new DigitalBoardDataType.CharacterirticsData(12, timeCharacteristic, MessageEventFlag.HsinpaBluetoothEvent.TimeIndexTable);
+            _scoreCharacteristic = new DigitalBoardDataType.CharacterirticsData(10, scoreCharacteristic, MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable, MessageEventFlag.HsinpaBluetoothEvent.ScoreKeyTable);
+            _timeCharacteristic = new DigitalBoardDataType.CharacterirticsData(12, timeCharacteristic, MessageEventFlag.HsinpaBluetoothEvent.TimeIndexTable, MessageEventFlag.HsinpaBluetoothEvent.TimeKeyTable);
         }
 
         public void OnEnable()

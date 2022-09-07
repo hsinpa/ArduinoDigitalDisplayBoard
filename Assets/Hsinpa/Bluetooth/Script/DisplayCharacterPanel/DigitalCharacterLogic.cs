@@ -30,7 +30,7 @@ namespace Hsinpa.Bluetooth
 
         private void Start()
         {
-            _characterType = new DigitalBoardDataType.CharacterirticsData(20, digitalBoardBluetoothManager.WordCharacteristic, CharacterMapping.CharactersTable);
+            _characterType = new DigitalBoardDataType.CharacterirticsData(20, digitalBoardBluetoothManager.WordCharacteristic, CharacterMapping.CharactersTable, null);
 
             //Register Event
             characterView.UpperCharacterTxtField.OnCharInputfieldChange += (string v) => { OnValueChange(); };

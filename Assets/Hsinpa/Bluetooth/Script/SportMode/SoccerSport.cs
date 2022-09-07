@@ -86,6 +86,11 @@ namespace Hsinpa.Bluetooth.Sport
         public void ExecuteReconnectionActions()
         {
             this._digitlaBoardLogicHandler.SportLogicFuncs.ResendData(this._digitalMessageSRP, this._bleDataModel);
+
+            int g_main_attact = this._bleDataModel.ScoreType.GetValue(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.G_main_attack);
+
+            if (g_main_attact == 1)
+                _digitalBoardView.Action_Function.Next_turn_btn.interactable = false;
         }
     }
 }

@@ -28,6 +28,20 @@ namespace SimpleEvent.ID {
 
         public class PlayerPref {
             public const string Save = "pref@save";
+
+            [System.Serializable]
+            public struct PlayerStruct
+            {
+                public int player_id;
+                public int p_score;
+                public int team;
+            }
+
+            [System.Serializable]
+            public struct FoulStruct
+            {
+                public List<PlayerStruct> players;
+            }
         }
 
         public class HsinpaBluetoothEvent {
@@ -150,6 +164,19 @@ namespace SimpleEvent.ID {
                 { ScoreUI.G_name, 9},
             };
 
+            public static Dictionary<int, string> ScoreKeyTable = new Dictionary<int, string>() {
+                {0, ScoreUI.H_score},
+                {1, ScoreUI.G_score},
+                {2, ScoreUI.H_foul},
+                {3,  ScoreUI.G_foul},
+                {4, ScoreUI.H_main_attack},
+                {5,ScoreUI.G_main_attack},
+                {6, ScoreUI.Sports_times},
+                {7, ScoreUI.Mode},
+                {8, ScoreUI.H_name },
+                {9, ScoreUI.G_name},
+            };
+
             public static Dictionary<string, int> TimeIndexTable = new Dictionary<string, int>() {
                 { TimeUI.Year, 0},
                 { TimeUI.Month, 1},
@@ -164,6 +191,22 @@ namespace SimpleEvent.ID {
 
                 { TimeUI.Time_display_mode, 10},
                 { TimeUI.Other_Second, 11},
+            };
+
+            public static Dictionary<int, string> TimeKeyTable = new Dictionary<int, string>() {
+                {0, TimeUI.Year},
+                {1,TimeUI.Month},
+                {2, TimeUI.Day},
+                { 3,TimeUI.Hour},
+                { 4,TimeUI.Minute},
+                { 5,TimeUI.Second},
+                { 6,TimeUI.Weekday},
+                { 7,TimeUI.Subsecond},
+                { 8,TimeUI.adjust_reason},
+                { 9,TimeUI.Counting_mode},
+
+                { 10,TimeUI.Time_display_mode},
+                { 11,TimeUI.Other_Second},
             };
 
             public static Dictionary<string, int> OtherIndexTable = new Dictionary<string, int>() {
@@ -187,6 +230,26 @@ namespace SimpleEvent.ID {
                 { OtherUI.FoulTotalG, 13},
             };
 
+            public static Dictionary<int, string> OtherKeyTable = new Dictionary<int, string>() {
+                { 0,OtherUI.Placard1},
+                {1, OtherUI.Placard2},
+                { 2,OtherUI.Placard3},
+                {3, OtherUI.Placard4},
+
+                {4, OtherUI.FoulMode},
+                {5, OtherUI.FoulPlayer},
+                {6, OtherUI.FoulCount},
+
+                { 7,OtherUI.Substitution},
+                { 8,OtherUI.Team},
+                {9, OtherUI.OnCourtPlayer},
+                {10, OtherUI.OffCourtPlayer},
+
+                {11, OtherUI.End},
+                {12, OtherUI.FoulTotalH},
+                {13, OtherUI.FoulTotalG},
+            };
+
             public struct SportSettingStruct {
                 public string id;
                 public string title;
@@ -195,13 +258,16 @@ namespace SimpleEvent.ID {
             public struct SportSaveStruct {
                 public string sport_id;
                 public int[] scores;
-                public int[] times;
                 public int[] others;
 
+                public int time_left_second;
+
                 public long timestamp;
+                public PlayerPref.FoulStruct foulStructs;
 
                 public bool Is_Valid => !string.IsNullOrEmpty(sport_id);
             }
+
 
             public static Dictionary<string, SportSettingStruct> SportSettingTable = new Dictionary<string, SportSettingStruct>() {
                 { SportMode.Default, new SportSettingStruct() { id = SportMode.Default, title = "Internal Testing" } },

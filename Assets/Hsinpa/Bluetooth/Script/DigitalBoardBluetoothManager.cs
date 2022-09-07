@@ -8,6 +8,7 @@ using Hsinpa.Utility;
 using SimpleEvent.ID;
 using Hsinpa.Bluetooth.View;
 using Hsinpa.Bluetooth.SignalTesting;
+using Hsinpa.View;
 
 namespace Hsinpa.Bluetooth
 {
@@ -62,6 +63,8 @@ namespace Hsinpa.Bluetooth
         public System.Action OnConnect;
         public System.Action OnDisconnect;
 
+        private bool first_application_start_flag = true;
+
         void Start()
         {
             try
@@ -94,6 +97,7 @@ namespace Hsinpa.Bluetooth
             {
                 Debug.LogError(e);
                 hintModeView.gameObject.SetActive(false);
+                DetectSaveRecord();
             }
 
             digitlaBoardLogicHandler.SetUp();
@@ -137,6 +141,11 @@ namespace Hsinpa.Bluetooth
             //helper.Subscribe(otherCharacteristic);
 
             hintModeView.gameObject.SetActive(false);
+
+            if (first_application_start_flag) {
+                DetectSaveRecord();
+                first_application_start_flag = false;
+            }
 
             if (OnConnect != null)
                 OnConnect();
@@ -226,6 +235,30 @@ namespace Hsinpa.Bluetooth
                 sportModeView.gameObject.SetActive(false);
                 digitalCharacterView.gameObject.SetActive(true);
             }
+        }
+
+        private void DetectSaveRecord() {
+            var savefile = BLEReconnection.GetSaveFile();
+
+            if (savefile.Is_Valid && MessageEventFlag.HsinpaBluetoothEvent.SportSettingTable.TryGetValue(savefile.sport_id, out var sportSettingStruct)) {
+                var save_modal = Modals.instance.OpenModal<SaveModal>();
+
+                save_modal.SetUp(sportSettingStruct.title, savefile.timestamp, async () => {
+                    Debug.Log("Save Resume " + savefile.sport_id);
+
+                    Modals.instance.Close();
+
+                    SimpleEventSystem.Send(MessageEventFlag.HsinpaBluetoothEvent.UIEvent.digitalboard_mode_view, savefile.sport_id);
+
+                    await System.Threading.Tasks.Task.Delay(500);
+
+                    digitlaBoardLogicHandler.ReimportModelData(savefile.scores, savefile.others, savefile.time_left_second, savefile.foulStructs);
+
+                    digitlaBoardLogicHandler.ExecReconnectAction();
+                });
+            }
+
+            BLEReconnection.Dispose();
         }
 
         private void OnApplicationQuit()

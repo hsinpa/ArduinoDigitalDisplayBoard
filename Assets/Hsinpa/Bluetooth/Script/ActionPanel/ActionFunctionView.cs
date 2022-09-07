@@ -1,3 +1,5 @@
+using Hsinpa.Utility;
+using SimpleEvent.ID;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,7 +23,6 @@ namespace Hsinpa.Bluetooth.View
 
         [SerializeField]
         private Button long_timeout_btn;
-
 
 
         public void SetTBVFuncMode()

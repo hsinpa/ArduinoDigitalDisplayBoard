@@ -109,7 +109,6 @@ namespace Hsinpa.Bluetooth
             if (record_counting_mode == counting_mode && (counting_mode != 3))
                 counting_mode = 0;
 
-            Debug.Log("Send counting mode " + counting_mode);
            //Prevent weird behavior from counting double call
             timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Counting_mode, counting_mode);
             timeType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Time_display_mode, time_mode);

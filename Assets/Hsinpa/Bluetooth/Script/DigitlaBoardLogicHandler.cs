@@ -64,9 +64,9 @@ namespace Hsinpa.Bluetooth
             digitalBoardBluetoothManager.OnDisconnect += OnBluetoothDisconnect;
 
             this._bleDataModel = new BLEDataModel(
-                scoreType: new DigitalBoardDataType.CharacterirticsData(10, digitalBoardBluetoothManager.ScoreCharacteristic, MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable),
-                timeType: new DigitalBoardDataType.CharacterirticsData(12, digitalBoardBluetoothManager.TimeCharacteristic,  MessageEventFlag.HsinpaBluetoothEvent.TimeIndexTable),
-                otherType: new DigitalBoardDataType.CharacterirticsData(14, digitalBoardBluetoothManager.OtherCharacteristic, MessageEventFlag.HsinpaBluetoothEvent.OtherIndexTable)
+                scoreType: new DigitalBoardDataType.CharacterirticsData(10, digitalBoardBluetoothManager.ScoreCharacteristic, MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable, MessageEventFlag.HsinpaBluetoothEvent.ScoreKeyTable),
+                timeType: new DigitalBoardDataType.CharacterirticsData(12, digitalBoardBluetoothManager.TimeCharacteristic,  MessageEventFlag.HsinpaBluetoothEvent.TimeIndexTable, MessageEventFlag.HsinpaBluetoothEvent.TimeKeyTable),
+                otherType: new DigitalBoardDataType.CharacterirticsData(14, digitalBoardBluetoothManager.OtherCharacteristic, MessageEventFlag.HsinpaBluetoothEvent.OtherIndexTable, MessageEventFlag.HsinpaBluetoothEvent.OtherKeyTable)
             );
 
             this._sportLogicFuncs = new SportLogicFuncs(this, digitalBoardEventSender, digitalBoardBluetoothManager);
@@ -162,6 +162,33 @@ namespace Hsinpa.Bluetooth
             digitalBoardEventSender.SendBluetoothData(bluetoothDataStruct);
         }
 
+        public void ReimportModelData(int[] score_data, int[] other_data, int target_time, MessageEventFlag.PlayerPref.FoulStruct foulStructs) {
+            this._bleDataModel.ScoreType.Set_DataSet(score_data);
+            this._bleDataModel.OtherType.Set_DataSet(other_data);
+            this._bleDataModel.TeamFoulModel.ImportFoulStruct(foulStructs);
+            this._bleDataModel.PrimaryTimer.SetExactTime(target_time);
+        }
+
+        public void ExecReconnectAction()
+        {
+            if (this._currentSport != null)
+            {
+                SportLogicFuncs.SendSimpleMessage(new DigitalBoardDataType.UIDataStruct()
+                {
+                    id = MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Start_Timer,
+                    category = MessageEventFlag.HsinpaBluetoothEvent.UIEvent.time
+                });
+
+                SportLogicFuncs.SendSimpleMessage(new DigitalBoardDataType.UIDataStruct()
+                {
+                    id = MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Sync_Time,
+                    category = MessageEventFlag.HsinpaBluetoothEvent.UIEvent.time
+                });
+
+                this._currentSport.ExecuteReconnectionActions();
+            }
+        }
+
         #region Event
         private void OnSimpleEventSystem(string id, object[] values) {
             if (id == MessageEventFlag.HsinpaBluetoothEvent.UIEvent.score && values.Length > 0)
@@ -185,7 +212,8 @@ namespace Hsinpa.Bluetooth
             uiDataStruct = GetUniqueSportStruct(uiDataStruct);
 
             if (uiDataStruct.exclusive) {
-                var emptyCharSet = new DigitalBoardDataType.CharacterirticsData(10, digitalBoardBluetoothManager.ScoreCharacteristic, MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable);
+                var emptyCharSet = new DigitalBoardDataType.CharacterirticsData(10, digitalBoardBluetoothManager.ScoreCharacteristic,
+                                                                                    MessageEventFlag.HsinpaBluetoothEvent.ScoreIndexTable, MessageEventFlag.HsinpaBluetoothEvent.ScoreKeyTable);
                 SendUIDataStructBLE(uiDataStruct, emptyCharSet);
                 return;
             }
@@ -251,22 +279,7 @@ namespace Hsinpa.Bluetooth
         }
 
         private void OnBluetoothConnect() {
-            if (this._currentSport != null)
-            {
-                SportLogicFuncs.SendSimpleMessage(new DigitalBoardDataType.UIDataStruct()
-                {
-                    id = MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Start_Timer,
-                    category = MessageEventFlag.HsinpaBluetoothEvent.UIEvent.time
-                });
-
-                SportLogicFuncs.SendSimpleMessage(new DigitalBoardDataType.UIDataStruct()
-                {
-                    id = MessageEventFlag.HsinpaBluetoothEvent.TimeUI.Sync_Time,
-                    category = MessageEventFlag.HsinpaBluetoothEvent.UIEvent.time
-                });
-
-                this._currentSport.ExecuteReconnectionActions();
-            }
+            ExecReconnectAction();
         }
 
         private void OnBluetoothDisconnect()

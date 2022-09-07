@@ -10,7 +10,8 @@ namespace Hsinpa.Bluetooth
         private System.TimeSpan target_second;
         private System.TimeSpan leak_datetime;
 
-        private System.TimeSpan Cache_Target_Second => target_second;
+        public System.TimeSpan Target_second => target_second;
+        public System.TimeSpan Leak_datetime => GetTimeDifferent();
 
         private bool timer_state = false;
         public bool TimerState => timer_state;
@@ -43,8 +44,11 @@ namespace Hsinpa.Bluetooth
             start_datetime = System.DateTime.UtcNow;
         }
 
-        public void ContinueTimer() { 
-            
+        public void SetExactTime(int p_target_second)
+        {
+            this.target_second = System.TimeSpan.FromSeconds(p_target_second);
+
+            start_datetime = System.DateTime.UtcNow;
         }
 
         public void StopTimer() {

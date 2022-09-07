@@ -19,6 +19,7 @@ namespace Hsinpa.Bluetooth
 
 
             private Dictionary<string, int> index_table;
+            Dictionary<int, string> key_table;
             private int length;
 
             public System.Action<string, int> OnValueChange;
@@ -26,11 +27,20 @@ namespace Hsinpa.Bluetooth
             private BluetoothHelperCharacteristic _bleCharacteristic;
             public BluetoothHelperCharacteristic BLECharacteristic => _bleCharacteristic;
 
-            public CharacterirticsData(int length, BluetoothHelperCharacteristic bleCharacteristic, Dictionary<string, int> index_table) {
+            public CharacterirticsData(int length, BluetoothHelperCharacteristic bleCharacteristic, Dictionary<string, int> index_table, Dictionary<int, string> key_table) {
                 this.length = length;
                 this._bleCharacteristic = bleCharacteristic;
                 this.raw_data = new byte[length];
                 this.index_table = index_table;
+                this.key_table = key_table;
+            }
+
+            public void Set_DataSet(int[] dataset) {
+                if (dataset == null) return;
+
+                for (int i = 0; i < dataset.Length; i++) {
+                    Set_Raw_Value(i, dataset[i]);
+                }
             }
 
             public void Increment_Value(string key, int max = -1) {
@@ -48,7 +58,6 @@ namespace Hsinpa.Bluetooth
                 {
                     return;
                 }
-
 
                 System.Int32 get_value = GetValue(key);
                 Set_Value(key, get_value - 1);
@@ -78,6 +87,10 @@ namespace Hsinpa.Bluetooth
             public void Set_Raw_Value(int index, System.Int32 value) {
                 if (index >= 0 && index < length) {
                     this.raw_data[index] = Convert.ToByte(value);
+
+                    if (this.key_table != null && OnValueChange != null && this.key_table.TryGetValue(index, out string key)) {
+                        OnValueChange(key, value);
+                    }
                 }
             }
 

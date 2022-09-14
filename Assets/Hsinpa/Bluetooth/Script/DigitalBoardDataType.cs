@@ -63,7 +63,7 @@ namespace Hsinpa.Bluetooth
                 Set_Value(key, get_value - 1);
             }
 
-            public void Set_Value(string key, System.Int32 value)
+            public void Set_Value(string key, System.Int32 value, bool send_event = true)
             {
                 if (index_table.TryGetValue(key, out int index))
                 {
@@ -71,7 +71,7 @@ namespace Hsinpa.Bluetooth
                     //Debug.Log("convert_byte " + convert_byte);
                     this.raw_data[index] = convert_byte;
 
-                    if (OnValueChange != null)
+                    if (OnValueChange != null && send_event)
                         OnValueChange(key, value);
                 }
             }

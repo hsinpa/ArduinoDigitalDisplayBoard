@@ -61,7 +61,7 @@ namespace Hsinpa.Bluetooth.Sport
                     if (!uiDataStruct.hide_bluetooth_event)
                         OnFoulConfigClick(team_id);
                     else
-                        _bleDataModel.ScoreType.Set_Value(uiDataStruct.id, uiDataStruct.value);
+                        _bleDataModel.ScoreType.Set_Value(uiDataStruct.id, uiDataStruct.value, send_event: false);
                     return;
             }
 

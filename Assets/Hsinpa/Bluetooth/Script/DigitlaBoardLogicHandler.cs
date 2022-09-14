@@ -307,6 +307,8 @@ namespace Hsinpa.Bluetooth
             if (this._currentSport != null)
                 this._currentSport.Exist();
 
+            this._currentSport = null;
+
             SportLogicFuncs.CleanDigitalBoard(digitalBoardBluetoothManager, digitalBoardEventSender);
         }
 

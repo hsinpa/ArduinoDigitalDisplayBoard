@@ -34,6 +34,22 @@ namespace Hsinpa.Bluetooth.Model
                 var team_dict = (m_playersStruct.players[i].team == 0) ? team_h_dict : team_g_dict;
                 Hsinpa.Utility.UtilityFunc.SetDictionary<int, int>(team_dict, m_playersStruct.players[i].player_id, m_playersStruct.players[i].p_score);
             }
+
+            Utility.SimpleEventSystem.Send(MessageEventFlag.HsinpaBluetoothEvent.UIEvent.ui_text,
+                new DigitalBoardDataType.UIDataStruct()
+                {
+                    id = MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.H_foul,
+                    value = GetTotalFouls(0)
+                }
+            );
+
+            Utility.SimpleEventSystem.Send(MessageEventFlag.HsinpaBluetoothEvent.UIEvent.ui_text,
+                new DigitalBoardDataType.UIDataStruct()
+                {
+                    id = MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.G_foul,
+                    value = GetTotalFouls(1)
+                }
+            );
         }
 
         public void SetPlayerValue(int team_id, int player_id, int p_value) {

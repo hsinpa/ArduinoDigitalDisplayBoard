@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Hsinpa.Bluetooth;
 using UnityEngine;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Hsinpa.Bluetooth
 {
@@ -17,11 +19,22 @@ namespace Hsinpa.Bluetooth
         [SerializeField]
         private DigitalBoardDataType.UIDataStruct[] uniqueDataStruct = new DigitalBoardDataType.UIDataStruct[0];
 
-        public void Execute()
+        private CancellationTokenSource _cancelSource;
+
+        public async void Execute()
         {
+            this._cancelSource = new CancellationTokenSource();
+
             int length = uiDataStructs.Length;
             for (int i = 0; i < length; i++)
             {
+                if (uiDataStructs[i].id == SimpleEvent.ID.MessageEventFlag.HsinpaBluetoothEvent.UtilityCommand.Delay) {
+                    Debug.Log("Process Delay");
+                    await Task.Delay(uiDataStructs[i].value, this._cancelSource.Token);
+                    Debug.Log("End Delay");
+                    continue;
+                }
+
                 //DigitalBoardDataType.UIDataStruct uiDataStruct = new DigitalBoardDataType.UIDataStruct() { id = key, value = value, is_increment = is_increment };
                 Utility.SimpleEventSystem.Send(uiDataStructs[i].category, uiDataStructs[i]);
             }
@@ -38,6 +51,13 @@ namespace Hsinpa.Bluetooth
             }
 
             return -1;
+        }
+
+        public void Dispose() {
+            if (this._cancelSource != null)
+                this._cancelSource.Cancel();
+
+            this._cancelSource = null;
         }
 
     }

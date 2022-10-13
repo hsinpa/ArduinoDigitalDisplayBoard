@@ -39,6 +39,9 @@ namespace Hsinpa.Bluetooth
         [SerializeField]
         private DigitlaBoardLogicHandler digitlaBoardLogicHandler;
 
+        [SerializeField]
+        private DigitalBoardEventSender digitalBoardEventSender;
+
         private BluetoothHelper helper;
         private LinkedList<BluetoothDevice> devices;
 
@@ -102,6 +105,8 @@ namespace Hsinpa.Bluetooth
 
             digitlaBoardLogicHandler.SetUp();
             signalTestScript.SetUp(digitlaBoardLogicHandler.DigitalBoardEventSender, scoreCharacteristic, timeCharacteristic);
+
+            Hsinpa.Utility.UtilityFunc.SetSimpleBtnEvent(sportModeView.DemoBtn, TriggerDemoEvent);
         }
 
         void OnDataReceived(BluetoothHelper helper)
@@ -235,6 +240,19 @@ namespace Hsinpa.Bluetooth
                 sportModeView.gameObject.SetActive(false);
                 digitalCharacterView.gameObject.SetActive(true);
             }
+        }
+
+        private void TriggerDemoEvent() {
+            digitalBoardEventSender.SendBluetoothData(new DigitalBoardDataType.BluetoothDataStruct()
+            {
+                characteristic = timeCharacteristic,
+                data = new byte[12] { 0, 0, 0, 0, 0, 0, 0, 12, 0, 3, 0, 0 }
+            });
+
+            digitalBoardEventSender.SendBluetoothData(new DigitalBoardDataType.BluetoothDataStruct() {
+                characteristic = scoreCharacteristic,
+                data = new byte[10] { 0, 0, 0, 0, 0, 0, 0, 12, 0, 0 }
+            });
         }
 
         private void DetectSaveRecord() {

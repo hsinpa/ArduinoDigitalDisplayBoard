@@ -151,6 +151,10 @@ namespace SimpleEvent.ID {
                 public const string OffCourtPlayer = "other@off_court_player";
             }
 
+            public class UtilityCommand {
+                public const string Delay = "command@delay";
+            }
+
             public static Dictionary<string, int> ScoreIndexTable = new Dictionary<string, int>() {
                 { ScoreUI.H_score, 0},
                 { ScoreUI.G_score, 1},

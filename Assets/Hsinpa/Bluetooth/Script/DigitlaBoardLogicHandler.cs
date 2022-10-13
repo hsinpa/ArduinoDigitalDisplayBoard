@@ -134,17 +134,21 @@ namespace Hsinpa.Bluetooth
             DigitalBoardDataType.CharacterirticsData characteristic_data) {
             Debug.Log($"SendUIDataStructBLE Send : { uiDataStruct.id }, value ${uiDataStruct.value}");
 
-            if (uiDataStruct.max_value > 0 && uiDataStruct.max_value <= characteristic_data.GetValue(uiDataStruct.id)) {
+            if (uiDataStruct.is_increment && uiDataStruct.value >= 0 &&
+                uiDataStruct.max_value > 0 && uiDataStruct.max_value <= characteristic_data.GetValue(uiDataStruct.id))
+            {
                 Debug.Log($"SendUIDataStructBLE Warning : { uiDataStruct.id } Max value is reach");
                 return;
             }
-            
+
             if (uiDataStruct.is_increment)
             {
-                if (uiDataStruct.value >= 0)
+                if (uiDataStruct.value >= 0) {
                     characteristic_data.Increment_Value(uiDataStruct.id);
-                else
+                }
+                else if (uiDataStruct.value < 0 && characteristic_data.GetValue(uiDataStruct.id) > 0) {
                     characteristic_data.Decrement_Value(uiDataStruct.id);
+                }
             }
             else
             {
@@ -152,6 +156,9 @@ namespace Hsinpa.Bluetooth
             }
 
             if (uiDataStruct.hide_bluetooth_event) return;
+
+            Debug.Log("uiDataStruct " + uiDataStruct.id);
+            characteristic_data.DebugLog();
 
             DigitalBoardDataType.BluetoothDataStruct bluetoothDataStruct = new DigitalBoardDataType.BluetoothDataStruct()
             {
@@ -304,8 +311,10 @@ namespace Hsinpa.Bluetooth
             this._bleDataModel.Dispose();
             this._bleDataModel.PrimaryTimer.ResetTimer();
 
-            if (this._currentSport != null)
+            if (this._currentSport != null) {
+                this._currentSport.SRP.Dispose();
                 this._currentSport.Exist();
+            }
 
             this._currentSport = null;
 

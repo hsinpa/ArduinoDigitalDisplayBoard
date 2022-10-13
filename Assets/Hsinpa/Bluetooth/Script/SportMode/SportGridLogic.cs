@@ -3,11 +3,15 @@ using SimpleEvent.ID;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Hsinpa.Bluetooth
 {
     public class SportGridLogic : MonoBehaviour
     {
+        [SerializeField]
+        private Button demoBtn;
+        public Button DemoBtn => demoBtn;
 
         private SportGridBtn[] gridBtnArray;
 

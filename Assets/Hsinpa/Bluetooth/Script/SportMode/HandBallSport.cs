@@ -70,7 +70,6 @@ namespace Hsinpa.Bluetooth.Sport
 
         public void OnScoreUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct)
         {
-            uiDataStruct.max_value = 127; //Prevent hardware score display error
             _digitlaBoardLogicHandler.SendUIDataStructBLE(uiDataStruct, this._bleDataModel.ScoreType);
         }
 

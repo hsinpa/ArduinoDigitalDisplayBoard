@@ -157,9 +157,6 @@ namespace Hsinpa.Bluetooth
 
             if (uiDataStruct.hide_bluetooth_event) return;
 
-            Debug.Log("uiDataStruct " + uiDataStruct.id);
-            characteristic_data.DebugLog();
-
             DigitalBoardDataType.BluetoothDataStruct bluetoothDataStruct = new DigitalBoardDataType.BluetoothDataStruct()
             {
                 characteristic = characteristic_data.BLECharacteristic,
@@ -217,6 +214,7 @@ namespace Hsinpa.Bluetooth
         private void OnScoreUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct) {
             Debug.Log("OnScoreUIChange " + uiDataStruct.id);
             uiDataStruct = GetUniqueSportStruct(uiDataStruct);
+            uiDataStruct.max_value = 127;
 
             if (uiDataStruct.exclusive) {
                 var emptyCharSet = new DigitalBoardDataType.CharacterirticsData(10, digitalBoardBluetoothManager.ScoreCharacteristic,
@@ -227,8 +225,6 @@ namespace Hsinpa.Bluetooth
 
             if (this._currentSport != null)
                 this._currentSport.OnScoreUIChange(uiDataStruct);
-
-            //SendUIDataStructBLE(uiDataStruct, this._bleDataModel.ScoreType);
         }
 
         private void OnTimerUIChange(DigitalBoardDataType.UIDataStruct uiDataStruct) {
@@ -330,7 +326,7 @@ namespace Hsinpa.Bluetooth
             if (unique_value >= 0) uiDataStruct.value = unique_value;
         }
 
-        return uiDataStruct;
+            return uiDataStruct;
     }
 
         private ISport GetSport(string id) {

@@ -94,10 +94,11 @@ namespace Hsinpa.Bluetooth
                 }
             }
 
-            public void DebugLog() {
+            public static void DebugLog(byte[] rawData) {
                 string str = "";
-                for (int i = 0; i < this.length; i++) {
-                    str += raw_data[i] +", ";
+                int length = rawData.Length;
+                for (int i = 0; i < length; i++) {
+                    str += rawData[i] +", ";
                 }
                 Debug.Log("convert_byte \n" + str);
             }

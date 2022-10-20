@@ -174,9 +174,12 @@ namespace Hsinpa.Bluetooth
         }
 
         public async void ExecSubstitution(int team_id, int broghtoff_id, int substitude_id, BLEDataModel bleDataModel) {
-            SportLogicFuncs.SetScoreMode(MessageEventFlag.Const.ScoreMode9,
-                                                    bleDataModel.ScoreType.BLECharacteristic,
-                                                    this._digitlaBoardLogicHandler.DigitalBoardEventSender);
+            //SportLogicFuncs.SetScoreMode(MessageEventFlag.Const.ScoreMode9,
+            //                                        bleDataModel.ScoreType.BLECharacteristic,
+            //                                        this._digitlaBoardLogicHandler.DigitalBoardEventSender);
+
+            bleDataModel.ScoreType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.Mode, 9);
+            this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(bleDataModel.ScoreType);
 
             bleDataModel.OtherType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.OtherUI.Substitution, 1);
             bleDataModel.OtherType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.OtherUI.Team, (team_id == 0) ? 1 : 2);
@@ -190,12 +193,11 @@ namespace Hsinpa.Bluetooth
             await Task.Delay(1000);
 
             //Debug.Log("Mode, " + bleDataModel.ScoreType.GetValue(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.Mode));
-
             bleDataModel.ScoreType.Set_Value(MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.Mode, 0);
-            this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(bleDataModel.ScoreType);
+            //this._digitlaBoardLogicHandler.DigitalBoardEventSender.SendBluetoothCharacterData(bleDataModel.ScoreType);
 
-            await Task.Yield();
-            SendTimeEvent(bleDataModel.TimeType, counting_mode: 2, time_mode: 0);
+            //await Task.Yield();
+            //SendTimeEvent(bleDataModel.TimeType, counting_mode: 2, time_mode: 0);
         }
 
         public static void SendSimpleMessage(DigitalBoardDataType.UIDataStruct uiDataStruct)

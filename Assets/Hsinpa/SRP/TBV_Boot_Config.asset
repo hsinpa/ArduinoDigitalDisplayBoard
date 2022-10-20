@@ -53,20 +53,20 @@ MonoBehaviour:
     hide_bluetooth_event: 0
     sync_struct_table: 1
     exclusive: 0
-  - id: score@h_main_attack
-    category: event@ui_score
-    value: 1
-    max_value: 0
-    is_increment: 0
-    hide_bluetooth_event: 0
-    sync_struct_table: 0
-    exclusive: 0
   - id: score@sport_time
     category: event@ui_score
     value: 1
     max_value: 0
     is_increment: 0
     hide_bluetooth_event: 1
+    sync_struct_table: 0
+    exclusive: 0
+  - id: score@h_main_attack
+    category: event@ui_score
+    value: 1
+    max_value: 0
+    is_increment: 0
+    hide_bluetooth_event: 0
     sync_struct_table: 0
     exclusive: 0
   uniqueDataStruct:

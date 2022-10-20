@@ -30,7 +30,8 @@ namespace Hsinpa.Bluetooth
 
         public void SetFieldFormat(string p_format) { 
             this.field_format = p_format;
-        } 
+            UpdateDataValue(data);
+        }
 
         private void OnSimpleEventSystem(string id, object[] values)
         {

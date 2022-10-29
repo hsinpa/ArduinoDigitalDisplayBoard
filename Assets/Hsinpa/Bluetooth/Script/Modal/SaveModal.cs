@@ -10,7 +10,16 @@ namespace Hsinpa.Bluetooth.View
     public class SaveModal : Modal
     {
         [SerializeField]
+        private TMPro.TextMeshProUGUI titleText;
+
+        [SerializeField]
         private TMPro.TextMeshProUGUI descriptionText;
+
+        [SerializeField]
+        private TMPro.TextMeshProUGUI yesBtnText;
+
+        [SerializeField]
+        private TMPro.TextMeshProUGUI noBtnText;
 
         [SerializeField]
 
@@ -19,12 +28,11 @@ namespace Hsinpa.Bluetooth.View
         [SerializeField]
         private Button resumeBtn;
 
-        public void SetUp(string sport_mode_name, long timestamp, System.Action resumeCallback) {
-            var dateTimeOffset = System.DateTimeOffset.FromUnixTimeSeconds(timestamp).ToLocalTime();
-            string timeString = dateTimeOffset.ToString("g");
-
-            string descString = string.Format(StaticText.Functions.SaveModalDescription, sport_mode_name, timeString);
+        public void SetUp(string titleString, string descString, string yesBtnString, string noBtnString, System.Action resumeCallback) {
             descriptionText.text = descString;
+            titleText.text = titleString;
+            yesBtnText.text = yesBtnString;
+            noBtnText.text = noBtnString;
 
             Hsinpa.Utility.UtilityFunc.SetSimpleBtnEvent(ignoreBtn, () =>
             {

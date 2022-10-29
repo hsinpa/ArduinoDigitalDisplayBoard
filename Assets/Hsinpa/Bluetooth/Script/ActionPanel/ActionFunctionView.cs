@@ -24,6 +24,8 @@ namespace Hsinpa.Bluetooth.View
         [SerializeField]
         private Button long_timeout_btn;
 
+        [SerializeField]
+        private Button reset_btn;
 
         public void SetTBVFuncMode()
         {

@@ -72,6 +72,7 @@ namespace SimpleEvent.ID {
                 public const string word_display_mode_view = "event@ui_word_display_mode";
                 public const string signal_testing_mode_view = "event@ui_signal_testing_mode";
                 public const string digitalboard_mode_view = "event@ui_digitalboard_mode";
+                public const string game_reset = "event@game_reset";
             }
 
             public class FunctionUI
@@ -81,7 +82,6 @@ namespace SimpleEvent.ID {
                 public const string Short_TimeOut = "function@short_timeout";
                 public const string Long_TimeOut = "function@long_timeout";
                 public const string Intermission = "function@intermission";
-
                 public const string Substitution = "function@substitution";
             }
 

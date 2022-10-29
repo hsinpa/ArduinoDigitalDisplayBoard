@@ -46,8 +46,7 @@ namespace Hsinpa.Bluetooth
             DigitalBoardDataType.BluetoothDataStruct uiDataStruct = dataStructQueue.Dequeue();
             digitalBoardBluetoothManager.WriteToCharacteristics(uiDataStruct.characteristic, uiDataStruct.data);
 
-            //Debug.Log("uiDataStruct " + uiDataStruct.characteristic.getName());
-            //DigitalBoardDataType.CharacterirticsData.DebugLog(uiDataStruct.data);
+            DigitalBoardDataType.CharacterirticsData.DebugLog(uiDataStruct.data);
 
             record_time = Time.time + perioid_delay;
         }

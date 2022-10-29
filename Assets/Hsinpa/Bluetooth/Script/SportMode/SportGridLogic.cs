@@ -13,6 +13,10 @@ namespace Hsinpa.Bluetooth
         private Button demoBtn;
         public Button DemoBtn => demoBtn;
 
+        [SerializeField]
+        private Button exitBtn;
+        public Button ExitBtn => exitBtn;
+
         private SportGridBtn[] gridBtnArray;
 
         private void OnEnable()

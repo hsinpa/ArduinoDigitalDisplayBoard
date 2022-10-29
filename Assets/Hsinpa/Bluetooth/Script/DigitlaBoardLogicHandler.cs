@@ -41,11 +41,15 @@ namespace Hsinpa.Bluetooth
         public SportLogicFuncs SportLogicFuncs => _sportLogicFuncs;
 
         private ISport _currentSport;
+        private MessageEventFlag.HsinpaBluetoothEvent.SportSettingStruct _sportSettingStruct;
+        public MessageEventFlag.HsinpaBluetoothEvent.SportSettingStruct SportSettingStruct => _sportSettingStruct;
+
 
         private const float update_period = 1f;
         private float update_record = 0;
 
         public void SetSportStruct(MessageEventFlag.HsinpaBluetoothEvent.SportSettingStruct sportSettingStruct) {
+            _sportSettingStruct = sportSettingStruct;
             _currentSport = GetSport(sportSettingStruct.id);
             _currentSport.Setup(this, sportSettingStruct, this._bleDataModel, digitalBoardBluetoothManager.DigitalBoardModeView);
 
@@ -192,7 +196,7 @@ namespace Hsinpa.Bluetooth
                 this._currentSport.ExecuteReconnectionActions();
             }
         }
-
+        
         #region Event
         private void OnSimpleEventSystem(string id, object[] values) {
             if (id == MessageEventFlag.HsinpaBluetoothEvent.UIEvent.score && values.Length > 0)

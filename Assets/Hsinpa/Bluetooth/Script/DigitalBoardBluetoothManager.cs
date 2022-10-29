@@ -9,6 +9,7 @@ using SimpleEvent.ID;
 using Hsinpa.Bluetooth.View;
 using Hsinpa.Bluetooth.SignalTesting;
 using Hsinpa.View;
+using System.Threading.Tasks;
 
 namespace Hsinpa.Bluetooth
 {
@@ -107,6 +108,7 @@ namespace Hsinpa.Bluetooth
             signalTestScript.SetUp(digitlaBoardLogicHandler.DigitalBoardEventSender, scoreCharacteristic, timeCharacteristic);
 
             Hsinpa.Utility.UtilityFunc.SetSimpleBtnEvent(sportModeView.DemoBtn, TriggerDemoEvent);
+            Hsinpa.Utility.UtilityFunc.SetSimpleBtnEvent(sportModeView.ExitBtn, TriggerExitEvent);
         }
 
         void OnDataReceived(BluetoothHelper helper)
@@ -240,6 +242,12 @@ namespace Hsinpa.Bluetooth
                 sportModeView.gameObject.SetActive(false);
                 digitalCharacterView.gameObject.SetActive(true);
             }
+
+            if (id == MessageEventFlag.HsinpaBluetoothEvent.UIEvent.game_reset)
+            {
+                digitlaBoardLogicHandler.ResetDigitalBoard();
+                digitlaBoardLogicHandler.SetSportStruct(digitlaBoardLogicHandler.SportSettingStruct);
+            }
         }
 
         private void TriggerDemoEvent() {
@@ -255,13 +263,35 @@ namespace Hsinpa.Bluetooth
             });
         }
 
+        private void TriggerExitEvent()
+        {
+            var save_modal = Modals.instance.OpenModal<SaveModal>();
+
+            save_modal.SetUp(StaticText.Functions.QuitModalTitle, StaticText.Functions.QuitModalDescription, StaticText.Functions.UniversalBtnYes, StaticText.Functions.UniversalBtnNo,
+                async () => {
+                if (helper != null && helper.Available)
+                    helper.Disconnect();
+
+                await Task.Delay(200);
+
+                Application.Quit();
+                Debug.Log("Application Quit");
+            });
+        }
+
         private void DetectSaveRecord() {
             var savefile = BLEReconnection.GetSaveFile();
 
             if (savefile.Is_Valid && MessageEventFlag.HsinpaBluetoothEvent.SportSettingTable.TryGetValue(savefile.sport_id, out var sportSettingStruct)) {
                 var save_modal = Modals.instance.OpenModal<SaveModal>();
 
-                save_modal.SetUp(sportSettingStruct.title, savefile.timestamp, async () => {
+                var dateTimeOffset = System.DateTimeOffset.FromUnixTimeSeconds(savefile.timestamp).ToLocalTime();
+                string timeString = dateTimeOffset.ToString("g");
+
+                string descString = string.Format(StaticText.Functions.SaveModalDescription, sportSettingStruct.title, timeString);
+
+                save_modal.SetUp(StaticText.Functions.SaveModalTitle, descString, StaticText.Functions.SaveModalBtnYes, StaticText.Functions.SaveModalBtnNo,
+                    async () => {
                     Debug.Log("Save Resume " + savefile.sport_id);
 
                     Modals.instance.Close();

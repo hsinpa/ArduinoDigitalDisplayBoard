@@ -227,6 +227,16 @@ namespace Hsinpa.Bluetooth
                 return;
             }
 
+            //Buzzer
+            if (uiDataStruct.id == MessageEventFlag.HsinpaBluetoothEvent.ScoreUI.Mode && uiDataStruct.value == 8) {
+                int original_mode = _bleDataModel.ScoreType.GetValue(uiDataStruct.id);
+                SendUIDataStructBLE(uiDataStruct, this._bleDataModel.ScoreType);
+
+                //Reset
+                _bleDataModel.ScoreType.Set_Value(uiDataStruct.id, original_mode, send_event: false);
+                return;
+            }
+
             if (this._currentSport != null)
                 this._currentSport.OnScoreUIChange(uiDataStruct);
         }

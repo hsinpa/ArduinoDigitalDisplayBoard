@@ -6299,7 +6299,7 @@ MonoBehaviour:
     is_increment: 0
     hide_bluetooth_event: 0
     sync_struct_table: 0
-    exclusive: 1
+    exclusive: 0
 --- !u!1 &2987558797783305417
 GameObject:
   m_ObjectHideFlags: 0
